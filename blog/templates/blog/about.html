@@ -1,0 +1,23 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>About MovieTicket</h1>
+      <p>MovieTicket is an online platform for buying tickets for movie showtimes. We offer a wide range of cinemas, screening rooms, and showtimes to choose from. Our goal is to make the movie-going experience as convenient and enjoyable as possible.</p>
+      <p>We also have a blog where we post articles about movies, cinema, and entertainment. Our blog is a great resource for movie enthusiasts and anyone looking for the latest news and trends in the movie industry.</p>
+      <h2>Contact Us</h2>
+      <p>If you have any questions or concerns, please don't hesitate to contact us:</p>
+      <ul>
+        <li>Email: <a href="mailto:info@movieticket.com">info@movieticket.com</a></li>
+        <li>Phone: (123) 456-7890</li>
+        <li>Address: 123 Main St, Anytown, USA</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <img src="{% static 'images/assets/cinema.jpg' %}" alt="Cinema" class="img-fluid">
+    </div>
+  </div>
+</div>
+{% endblock %}

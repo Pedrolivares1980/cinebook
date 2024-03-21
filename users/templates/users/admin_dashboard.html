@@ -1,0 +1,471 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Responsive Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light mt-1">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+            aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Menu -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" id="sidebarMenu">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#cinemasSection">Cinemas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#moviesSection">Movies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#screeningRoomsSection">Screening Rooms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#showtimesSection">Showtimes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#usersSection">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#bookingsSection">Bookings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="flex-grow-1 text-center">Admin Dashboard</h1>
+            </div>            
+            <!-- Cinemas Section -->
+            <div id="cinemasSection" class="admin-section mb-4">
+                <div class="table-responsive">
+                    <h3 class="text-center">Cinemas</h3>
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">
+                                    Name
+                                </th>
+                                <th class="align-middle">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cinema in cinemas %}
+                            <tr>
+                                <td class="align-middle">
+                                    {{ cinema.name }}
+                                </td>
+                                <td class="align-middle">
+                                    <a href="{% url 'cinema_edit' cinema.pk %}"  class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a href="{% url 'cinema_delete' cinema.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'cinema_add' %}" class="btn btn-primary">Add Cinema</a>
+                    <!--  Cinema Pagination Controls -->
+                    <nav aria-label="Cinemas Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if cinemas.has_previous %}
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?cinemas_page=1&section=cinemasSection" aria-label="First"> << </a>
+                            </li>
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?cinemas_page={{ cinemas.previous_page_number }}&section=ciemasSection" aria-label="Previous"> < </a>
+                            </li>
+                            {% endif %}
+                            <li class="page-item disabled m-1">
+                                <span class="btn btn-primary"> Page {{ cinemas.number }} of {{ cinemas.paginator.num_pages }}</span>
+                            </li>
+                            {% if cinemas.has_next %}
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?cinemas_page={{ cinemas.next_page_number }}&section=cinemasSection" aria-label="Next"> > </a>
+                            </li>
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?cinemas_page={{ cinemas.paginator.num_pages }}&section=cinemasSection" aria-label="Last"> >> </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- Movies Section -->
+            <div id="moviesSection" class="admin-section mb-4">
+                <div class="table-responsive">
+                    <h3 class="text-center">Movies</h3>
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">
+                                    Poster
+                                </th>
+                                <th class="align-middle">
+                                    Title
+                                </th>
+                                <th class="align-middle">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for movie in movies %}
+                            <tr>
+                                <td class="align-middle">
+                                    <img src="{{ movie.poster_path }}" alt="{{ movie.title }} poster" style="width: 100px; height: auto;">
+                                </td>
+                                <td class="align-middle">
+                                    {{ movie.title }}
+                                </td>
+                                <td class="align-middle">
+                                    <a href="{% url 'admin_movie_edit' movie.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a href="{% url 'admin_movie_delete' movie.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{% url 'admin_movie_create' %}" class="btn btn-primary">Add Movie</a>
+                    <!-- Pagination Controls for Movies -->
+                    <nav aria-label="Movies Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if movies.has_previous %}
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?movies_page=1&section=moviesSection" aria-label="First"> << </a>
+                            </li>
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?movies_page={{ movies.previous_page_number }}&section=moviesSection" aria-label="Previous"> < </a>
+                            </li>
+                            {% endif %}
+                            <!-- Current Page Indicator -->
+                            <li class="page-item disabled m-1">
+                                <span class="btn btn-primary">Page {{ movies.number }} of {{ movies.paginator.num_pages }}</span>
+                            </li>
+                            {% if movies.has_next %}
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?movies_page={{ movies.next_page_number }}&section=moviesSection" aria-label="Next"> > </a>
+                            </li>
+                            <li class="page-item m-1">
+                                <a class="btn btn-primary" href="?movies_page={{ movies.paginator.num_pages }}&section=moviesSection" aria-label="Last"> >> </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- Section for Screening Rooms -->
+            <div id="screeningRoomsSection" class="admin-section">
+                <div class="table-responsive">
+                    <div class="mb-4">
+                        <h3 class="text-center">Screening Rooms</h3>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle">
+                                        Name
+                                    </th>
+                                    <th class="align-middle">
+                                        Cinema
+                                    </th>
+                                    <th class="align-middle">
+                                        Capacity
+                                    </th>
+                                    <th class="align-middle">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for room in screening_rooms %}
+                                <tr>
+                                    <td class="align-middle">
+                                        {{ room.name }} 
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ room.cinema.name }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ room.capacity }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="{% url 'screeningroom_update' room.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <a href="{% url 'screeningroom_delete' room.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <a href="{% url 'screeningroom_create' %}" class="btn btn-primary">Add Screeningroom</a>
+                        <!-- Pagination Controls for screeningrooms -->
+                        <nav aria-label="Screeningrooms Pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if screening_rooms.has_previous %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?screening_rooms_page=1&section=screeningroomsSection" aria-label="First"> << </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?screening_rooms_page={{ screening_rooms.previous_page_number }}&section=screeningroomsSection" aria-label="Previous"> < </a>
+                                </li>
+                                {% endif %}
+                                <!-- Current Page Indicator -->
+                                <li class="page-item disabled m-1">
+                                    <span class="btn btn-primary">Page {{ screening_rooms.number }} of {{ screening_rooms.paginator.num_pages }}</span>
+                                </li>
+                                {% if screening_rooms.has_next %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?screening_rooms_page={{ screening_rooms.next_page_number }}&section=screeningroomsSection" aria-label="Next"> > </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?screening_rooms_page={{ screening_rooms.paginator.num_pages }}&section=screeningroomsSection" aria-label="Last"> >> </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Section for Showtimes -->
+            <div id="showtimesSection" class="admin-section">
+                <div class="table-responsive">
+                    <div class="mb-4">
+                        <h3 class="text-center">Showtimes</h3>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle">
+                                        Movie
+                                    </th>
+                                    <th class="align-middle">
+                                        Showtime
+                                    </th>
+                                    <th class="align-middle">
+                                        Screening Room
+                                    </th>
+                                    <th class="align-middle">
+                                        Available Seats
+                                    </th>
+                                    <th class="align-middle">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for showtime in showtimes %}
+                                <tr>
+                                    <td class="align-middle">
+                                        <img src="{{ showtime.movie.poster_path }}" alt="{{ movie.title }} poster" style="width: 100px; height: auto;">
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ showtime.showtime|date:"d-m-Y H:i" }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ showtime.screening_room.name }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ showtime.available_seats }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="{% url 'showtime_update' showtime.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <a href="{% url 'showtime_delete' showtime.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <a href="{% url 'showtime_create' %}" class="btn btn-primary">Add Showtime</a>
+                        <!-- Pagination Controls for showtimes -->
+                        <nav aria-label="Showtimes Pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if showtimes.has_previous %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?showtimes_page=1&section=showtimesSection" aria-label="First"> << </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?showtimes_page={{ showtimes.previous_page_number }}&section=showtimesSection" aria-label="Previous"> < </a>
+                                </li>
+                                {% endif %}
+                                <!-- Current Page Indicator -->
+                                <li class="page-item disabled m-1">
+                                    <span class="btn btn-primary">Page {{ showtimes.number }} of {{ showtimes.paginator.num_pages }}</span>
+                                </li>
+                                {% if showtimes.has_next %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?showtimes_page={{ showtimes.next_page_number }}&section=showtimesSection" aria-label="Next"> > </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?showtimes_page={{ showtimes.paginator.num_pages }}&section=showtimesSection" aria-label="Last"> >> </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Section for Users -->
+            <div id="usersSection" class="admin-section">
+                <div class="table-responsive">
+                    <div class="mb-4">
+                        <h3 class="text-center">Users</h3>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle">
+                                        Profile Image
+                                    </th>
+                                    <th class="align-middle">
+                                        Username
+                                    </th>
+                                    <th class="align-middle">
+                                        Email
+                                    </th>
+                                    <th class="align-middle">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td class="align-middle">
+                                        <img src="{{ user.profile.image.url }}" alt="{{ user.username }} profile image" class=" rounded-circle mx-auto my-2 d-block profile-image-admin ">
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ user.username }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ user.email }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="{% url 'edit_user' user.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                        <a href="{% url 'delete_user' user.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Pagination Controls for users -->
+                        <nav aria-label="Users Pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if users.has_previous %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?users_page=1&section=usersSection" aria-label="First"> << </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?users_page={{ users.previous_page_number }}&section=usersSection" aria-label="Previous"> < </a>
+                                </li>
+                                {% endif %}
+                                <!-- Current Page Indicator -->
+                                <li class="page-item disabled m-1">
+                                    <span class="btn btn-primary">Page {{ users.number }} of {{ users.paginator.num_pages }}</span>
+                                </li>
+                                {% if users.has_next %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?users_page={{ users.next_page_number }}&section=usersSection" aria-label="Next"> > </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?users_page={{ users.paginator.num_pages }}&section=usersSection" aria-label="Last"> >> </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Section for Bookings -->
+            <div id="bookingsSection" class="admin-section">
+                <div class="table-responsive">
+                    <div class="mb-4">
+                        <h3 class="text-center">Bookings</h3>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th class="align-middle">
+                                        User
+                                    </th>
+                                    <th class="align-middle">
+                                        Movie
+                                    </th>
+                                    <th class="align-middle">
+                                        Screening Room
+                                    </th>
+                                    <th class="align-middle">
+                                        Showtime
+                                    </th>
+                                    <th class="align-middle">
+                                        Seats Reserved
+                                    </th>
+                                    <th class="align-middle">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                <tr>
+                                    <td class="align-middle">
+                                        {{ booking.user.email }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <img src="{{ booking.showtime.movie.poster_path }}" alt="{{ booking.showtime.movie.title }} poster" style="width: 100px; height: auto;">
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ booking.showtime.screening_room.name }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {{ booking.showtime.showtime|date:"d-m-Y H:i" }}
+                                    </td>
+                                    <td class="align-middle">
+                                        {% for seat_reservation in booking.seat_reservations.all %}
+                                        Seat {{ seat_reservation.seat.seat_number }}{{ seat_reservation.seat.row_letter }},
+                                        {% endfor %}
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="{% url 'delete_booking' booking.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Pagination Controls for bookings -->
+                        <nav aria-label="Bookings Pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if bookings.has_previous %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?bookings_page=1&section=bookingsSection" aria-label="First"> << </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?bookings_page={{ bookings.previous_page_number }}&section=bookingsSection" aria-label="Previous"> < </a>
+                                </li>
+                                {% endif %}
+                                <!-- Current Page Indicator -->
+                                <li class="page-item disabled m-1">
+                                    <span class="btn btn-primary">Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}</span>
+                                </li>
+                                {% if bookings.has_next %}
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?bookings_page={{ bookings.next_page_number }}&section=bookingsSection" aria-label="Next"> > </a>
+                                </li>
+                                <li class="page-item m-1">
+                                    <a class="btn btn-primary" href="?bookings_page={{ bookings.paginator.num_pages }}&section=bookingsSection" aria-label="Last"> >> </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="{% static 'js/admin.js' %}"></script>
+{% endblock %}

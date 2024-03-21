@@ -1,0 +1,17 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Screening Rooms</h2>
+    <a href="{% url 'screeningroom_create' %}" class="btn btn-success mb-3">Add New Room</a>
+    <div class="list-group">
+        {% for room in object_list %}
+            <a href="{% url 'screeningroom_detail' room.id %}" class="list-group-item list-group-item-action">
+                {{ room.name }} - {{ room.cinema.name }} ({{ room.capacity }} seats)
+            </a>
+        {% empty %}
+            <p>No screening rooms available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

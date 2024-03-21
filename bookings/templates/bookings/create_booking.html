@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Create Booking for "{{ showtime.movie.title }}" at "{{ showtime.screening_room.name }}"</h2>
+    <p>Showtime: {{ showtime.showtime|date:"d-m-Y H:i" }}</p>
+
+    <form id="bookingForm" method="post">
+        {% csrf_token %}
+        {{ form.showtime.as_hidden }}
+        <div id="seatSelection"></div>
+        <div >
+            <button type="submit" class="btn btn-primary">Book Seats</button>
+            <a href="{% url 'showtime_list' %}" class="btn btn-secondary">Back</a>
+        </div>
+    </form>
+</div>
+
+<script src="{% static 'js/create_booking.js' %}" defer></script>
+<script>
+    document.currentScript.setAttribute('data-showtime-id', '{{ showtime.id }}');
+</script>
+{% endblock %}

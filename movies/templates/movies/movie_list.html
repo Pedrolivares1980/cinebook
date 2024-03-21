@@ -1,0 +1,59 @@
+{% extends 'blog/base.html' %} {% load static %} {% block content %}
+
+<div class="mt-4 rounded-3">
+    <div class="container text-center mt-3 p-2">
+        <h1>Welcome to MovieTicket</h1>
+        <p>Explore our wonderful showtimes and cinemas, choose your favorites seats and come to enjoy with us!.</p>
+    </div>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-6 carrousel-container">
+                <div id="movieCarousel" class="carousel slide rounded-3" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for movie in movies %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{  movie.poster_path }}" class="d-block rounded-3 w-100"
+                                alt="{{ movie.title }} poster" />
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Carousel controls -->
+                    <a class="carousel-control-prev" href="#movieCarousel" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#movieCarousel" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="mt-md-4 mt-3">
+                    <h2 class="text-center">Enjoy a Movie</h2>
+                    <p class="text-center">
+                        Enjoy delicious snacks while watching the latest releases from around the world.</p>
+                    </p>
+                    <img src="{% static 'images/assets/popcorn.jpg' %}" class="img-thumbnail rounded-3"
+                        alt="popcorns" />
+                </div>
+                <div class="text-center">
+                    <a href="{% url 'showtime_list' %}" class="btn btn-primary mx-auto my-3">View All Showtimes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-4 p-3 mb-3">
+        <div class="col-lg-12 text-center">
+            <h2 class="text-center my-3">Discover Our Cinemas</h2>
+            <p>
+                Discover our modern screening rooms, relax in our comfortable seats while you enjoy your favourite premiere
+                with whoever you prefer. We have cinemas located all over the country.
+            </p>
+            <img src="{% static 'images/assets/movie-theater.jpg' %}" class="img-thumbnail rounded-3"
+                alt="movie theater" />
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'blog/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Edit Cinema{% else %}Add New Cinema{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{% url 'cinema_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
