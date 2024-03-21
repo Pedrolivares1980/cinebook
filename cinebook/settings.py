@@ -134,7 +134,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'),]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
 
 # Media files configuration for Amazon S3
@@ -160,4 +160,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER') 
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-TMDB_API_KEY = os.environ.get('TMDB_API_KEY') 
+TMDB_API_KEY = os.environ.get('TMDB_API_KEY')
