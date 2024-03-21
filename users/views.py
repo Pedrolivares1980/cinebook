@@ -16,6 +16,10 @@ from movies.models import Movie
 from django.contrib.auth.models import User
 from bookings.models import Booking
 from django.core.paginator import Paginator
+import io
+from django.http import FileResponse
+from django.db.models import Q
+
 
 
 
@@ -50,9 +54,10 @@ class AdminDashboardView(UserPassesTestMixin, TemplateView):
         page_number = self.request.GET.get(page_param, 1)
         return paginator.get_page(page_number)
     
+# User registration view
 def register(request):
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST) 
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -85,6 +90,20 @@ def logout_view(request):
 
 @login_required
 def profile(request):
+    # Updating user and profile information
+    if request.method == "POST":
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated')
+            return redirect('profile')
+
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
     # Fetch bookings, ensuring current bookings are for future showtimes
     current_bookings_query = Booking.objects.filter(
         user=request.user, 
@@ -118,20 +137,21 @@ def profile(request):
 
 @login_required
 @user_passes_test(is_staff)
-def edit_user(request, pk):
-    user = get_object_or_404(User, pk=pk)
+def edit_user(request, user_id=None):
+    user = get_object_or_404(User, pk=user_id) if user_id else request.user
+
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user.profile)
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, 'The user has been updated.')
-            return redirect('admin_dashboard')
+            messages.success(request, 'Profile has been updated!')
+            return redirect('user_detail', user_id=user.pk) 
     else:
         u_form = UserUpdateForm(instance=user)
         p_form = ProfileUpdateForm(instance=user.profile)
-    
+
     context = {
         'u_form': u_form,
         'p_form': p_form,
@@ -141,10 +161,17 @@ def edit_user(request, pk):
 
 @login_required
 @user_passes_test(is_staff)
-def delete_user(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    if request.method == 'POST':
-        user.delete()
-        messages.success(request, 'The user has been deleted.')
-        return redirect('admin_dashboard')
-    return render(request, 'users/delete_user.html', {'user': user})
+def delete_user(request, user_id=None):
+    user = get_object_or_404(User, id=user_id)
+    if request.user.is_staff or request.user == user:
+        if request.method == "POST":
+            user.delete()
+            messages.success(request, 'The user account has been successfully deleted.')
+            if request.user.is_staff:
+                return redirect('admin_dashboard')
+            else:
+                return redirect('movie_list')
+        return render(request, 'users/delete_user.html', {'user': user})
+    else:
+        messages.error(request, 'You do not have permission to delete this user.')
+        return redirect('movie_list')
