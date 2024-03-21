@@ -85,36 +85,6 @@ a {
 
 /* ---------------------------tickets--------------------------------- */
 
-.ticket-container {
-    position: relative;
-    width: fit-content;
-    margin-bottom: 20px;
-}
-
-.ticket-background {
-    width: 100%;
-    display: block; /* Ensure the image does not have extra space below */
-}
-
-.ticket-info {
-    position: absolute;
-    top: 10%; /* Adjust based on your image */
-    left: 5%; /* Adjust based on your image */
-    color: #fff; /* Adjust text color based on your image */
-    text-align: left;
-}
-
-/* Style for your ticket details */
-.ticket-info h3 {
-    margin: 0;
-    padding: 0;
-    font-size: 1.2rem;
-}
-
-.ticket-info p {
-    margin: 5px 0;
-    font-size: 0.9rem;
-}
 
 
 /* ---------------------------------Carrousel-------------------- */
@@ -217,6 +187,27 @@ a {
     width: 150px;
     height: 150px;
     object-fit: cover;
+}
+
+/* Accordion Bookings */
+
+.custom-accordion-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; 
+}
+
+.image-container {
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-poster {
+    max-width: 100%;
+    height: auto; 
 }
 
 
