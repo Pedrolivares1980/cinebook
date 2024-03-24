@@ -47,4 +47,8 @@ urlpatterns = [
 
     # Comment delete page URL pattern
     path("comment/<int:pk>/delete/", CommentDeleteView.as_view(), name="comment-delete"),
+    
+    path('like_post/', views.like_post, name='like_post'),
+    path('like_comment/', views.like_comment, name='like_comment'),
+
 ]

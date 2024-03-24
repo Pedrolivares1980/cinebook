@@ -1,19 +1,27 @@
 {% extends "blog/base.html" %}
-
+{% load static %}
 {% block content %}
-<div class="d-flex flex-column flex-md-row container">
+<script>
+  var csrftoken = '{{ csrf_token }}';
+</script>
 
+</script>
+<div class="d-flex flex-column flex-md-row container">
   <div class="col-md-8">
-    {% for post in posts %}
+    {% for item in posts_with_comments_count %}
     <article class="media content-section">
-      <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+      <img class="rounded-circle article-img w-25" src="{{ item.post.author.profile.image.url }}">
       <div class="media-body">
         <div class="article-metadata">
-          <p class="mr-2">by {{ post.author }}</p>
-          <small>{{ post.date_posted|date:'dS, F, Y' }}</small>
+          <p class="mr-2">by {{ item.post.author }}</p>
+          <small>{{ item.post.date_posted|date:'dS, F, Y' }}</small>
         </div>
-        <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-        <p class="article-content">{{ post.content }}</p>
+        <h2><a class="article-title" href="{% url 'post-detail' item.post.id %}">{{ item.post.title }}</a></h2>
+        <p class="article-content">{{ item.post.content|truncatewords:20 }}</p>
+        <!-- Corrected data-id and likes count to use item.post.id and item.post.likes.count -->
+        <button class="like-post btn btn-primary" id="like-btn-post-{{ item.post.id }}" data-id="{{ item.post.id }}">Like</button>
+        <span id="like-count-post-{{ item.post.id }}">{{ item.post.likes.count }} Likes</span>
+        <a class="btn btn-success" href="{% url 'post-detail' item.post.id %}">Comments: {{ item.comments_count }}</a>
       </div>
     </article>
     {% endfor %}
@@ -21,16 +29,17 @@
   
   <div class="col-md-4 mt-4 mt-md-0">
     <div class="content-section">
-      <h3>CineBook Blog</h3>
-      <ul class="list-group">
+      <h3 class="text-center">CineBook Blog</h3>
+      <div class="d-grid gap-2">
         {% if user.is_authenticated %}
-        <li class="list-group-item list-group-item-light"><a href="{% url 'post-create' %}">New Post</a></li>
-        <li class="list-group-item list-group-item-light"><a href="{% url 'user-posts' user.username %}">My Posts</a></li>
+        <a href="{% url 'post-create' %}" class="btn btn-primary btn-block">New Post</a>
+        <a href="{% url 'user-posts' user.username %}" class="btn btn-primary btn-block">My Posts</a>
         {% endif %}
-        <li class="list-group-item list-group-item-light"><a href="{% url 'blog-home' %}">Latest Posts</a></li>
-      </ul>
+        <a href="{% url 'blog-home' %}" class="btn btn-primary btn-block">Latest Posts</a>
+      </div>
     </div>
   </div>
+  
 
 </div>
 
@@ -59,5 +68,6 @@
     </ul>
   </nav>
 
+<script src="{% static 'js/blog.js' %}"></script>
 {% endblock content %}
 

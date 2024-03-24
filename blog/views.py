@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from django.views.generic import (
     ListView,
     DetailView,
@@ -12,7 +14,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-from .models import Post, Comment
+from .models import Post, Comment, PostLike, CommentLike
+from django.http import JsonResponse
+import json
 
 class PostListView(ListView):
     """
@@ -29,6 +33,12 @@ class PostListView(ListView):
         Add the main comments to the context data.
         """
         context = super().get_context_data(**kwargs)
+        context['posts_with_comments_count'] = [
+            {
+                'post': post,
+                'comments_count': Comment.objects.filter(post=post).count()            }
+            for post in context['posts']
+        ]
         return context
 
 
@@ -291,6 +301,40 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         for child_comment in comment.replies.all():
             self._recursive_delete(child_comment)
         comment.delete()
+
+@require_POST
+@login_required
+def like_post(request):
+    # Parse the JSON body of the request
+    data = json.loads(request.body)
+    post_id = data.get('id')
+
+    # Fetch the post by ID
+    post = Post.objects.get(id=post_id)
+    liked = False  # Default to not liked
+
+    if post.likes.filter(id=request.user.id).exists():
+        # If the user already liked this post, unlike it
+        post.likes.remove(request.user)
+    else:
+        # Otherwise, like it
+        post.likes.add(request.user)
+        liked = True
+
+    return JsonResponse({'total_likes': post.likes.count(), 'liked': liked})
+
+def like_comment(request):
+    comment_id = request.POST.get('id')
+    comment = Comment.objects.get(id=comment_id)
+    
+    if comment.liked_by_user(request.user):
+        comment.likes.filter(user=request.user).delete()
+        liked = False
+    else:
+        CommentLike.objects.create(comment=comment, user=request.user)
+        liked = True
+    
+    return JsonResponse({'liked': liked, 'total_likes': comment.total_likes()})
 
 def about(request):
     """
