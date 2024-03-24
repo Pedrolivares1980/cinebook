@@ -3,9 +3,10 @@
 
 {% block content %}
 <!-- Responsive Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light mt-1">
+<nav class="navbar navbar-expand-lg bg-dark text-white mt-1 ">
     <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+        <p class=" fs-3">Category Filters</p>
+        <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
             aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,11 +16,11 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar Menu -->
-        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" id="sidebarMenu">
-            <div class="position-sticky pt-3">
-                <ul class="nav flex-column">
+        <div class="col-md-3 col-lg-2 d-md-block bg-dark  sidebar collapse " id="sidebarMenu">
+            <div class="position-sticky pt-3 ">
+                <ul class="nav flex-column  text-center">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#cinemasSection">Cinemas</a>
+                        <a class="nav-link" aria-current="page" href="#cinemasSection">Cinemas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#moviesSection">Movies</a>
@@ -40,15 +41,15 @@
             </div>
         </div>
         <!-- Main Content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="col-md-9 ms-sm-auto col-lg-10 bg-secondary border border-2 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="flex-grow-1 text-center">Admin Dashboard</h1>
             </div>            
             <!-- Cinemas Section -->
             <div id="cinemasSection" class="admin-section mb-4">
-                <div class="table-responsive">
+                <div class="table-responsive ">
                     <h3 class="text-center">Cinemas</h3>
-                    <table class="table text-center">
+                    <table class="table text-center table-primary table-bordered">
                         <thead>
                             <tr>
                                 <th class="align-middle">
@@ -86,7 +87,7 @@
                             </li>
                             {% endif %}
                             <li class="page-item disabled m-1">
-                                <span class="btn btn-primary"> Page {{ cinemas.number }} of {{ cinemas.paginator.num_pages }}</span>
+                                <span class="btn btn-primary custom_pagination"> Page {{ cinemas.number }} of {{ cinemas.paginator.num_pages }}</span>
                             </li>
                             {% if cinemas.has_next %}
                             <li class="page-item m-1">
@@ -104,7 +105,7 @@
             <div id="moviesSection" class="admin-section mb-4">
                 <div class="table-responsive">
                     <h3 class="text-center">Movies</h3>
-                    <table class="table text-center">
+                    <table class="table text-center table-primary table-bordered">
                         <thead>
                             <tr>
                                 <th class="align-middle">
@@ -149,7 +150,7 @@
                             {% endif %}
                             <!-- Current Page Indicator -->
                             <li class="page-item disabled m-1">
-                                <span class="btn btn-primary">Page {{ movies.number }} of {{ movies.paginator.num_pages }}</span>
+                                <span class="btn btn-primary custom_pagination">Page {{ movies.number }} of {{ movies.paginator.num_pages }}</span>
                             </li>
                             {% if movies.has_next %}
                             <li class="page-item m-1">
@@ -168,7 +169,7 @@
                 <div class="table-responsive">
                     <div class="mb-4">
                         <h3 class="text-center">Screening Rooms</h3>
-                        <table class="table text-center">
+                        <table class="table text-center table-primary table-bordered">
                             <thead>
                                 <tr>
                                     <th class="align-middle">
@@ -219,7 +220,7 @@
                                 {% endif %}
                                 <!-- Current Page Indicator -->
                                 <li class="page-item disabled m-1">
-                                    <span class="btn btn-primary">Page {{ screening_rooms.number }} of {{ screening_rooms.paginator.num_pages }}</span>
+                                    <span class="btn btn-primary custom_pagination">Page {{ screening_rooms.number }} of {{ screening_rooms.paginator.num_pages }}</span>
                                 </li>
                                 {% if screening_rooms.has_next %}
                                 <li class="page-item m-1">
@@ -239,7 +240,7 @@
                 <div class="table-responsive">
                     <div class="mb-4">
                         <h3 class="text-center">Showtimes</h3>
-                        <table class="table text-center">
+                        <table class="table text-center table-primary table-bordered">
                             <thead>
                                 <tr>
                                     <th class="align-middle">
@@ -296,7 +297,7 @@
                                 {% endif %}
                                 <!-- Current Page Indicator -->
                                 <li class="page-item disabled m-1">
-                                    <span class="btn btn-primary">Page {{ showtimes.number }} of {{ showtimes.paginator.num_pages }}</span>
+                                    <span class="btn btn-primary custom_pagination">Page {{ showtimes.number }} of {{ showtimes.paginator.num_pages }}</span>
                                 </li>
                                 {% if showtimes.has_next %}
                                 <li class="page-item m-1">
@@ -316,7 +317,7 @@
                 <div class="table-responsive">
                     <div class="mb-4">
                         <h3 class="text-center">Users</h3>
-                        <table class="table text-center">
+                        <table class="table text-center table-primary table-bordered">
                             <thead>
                                 <tr>
                                     <th class="align-middle">
@@ -331,25 +332,39 @@
                                     <th class="align-middle">
                                         Actions
                                     </th>
+                                    <th class="align-middle">
+                                        User Permissions
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for user in users %}
-                                <tr>
-                                    <td class="align-middle">
-                                        <img src="{{ user.profile.image.url }}" alt="{{ user.username }} profile image" class=" rounded-circle mx-auto my-2 d-block profile-image-admin ">
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ user.username }}
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ user.email }}
-                                    </td>
-                                    <td class="align-middle">
-                                        <a href="{% url 'edit_user' user.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                        <a href="{% url 'delete_user' user.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
-                                    </td>
-                                </tr>
+                                    {% if not user == request.user %}
+                                    <tr>
+                                        <td class="align-middle">
+                                            <img src="{{ user.profile.image.url }}" alt="{{ user.username }} profile image" class=" rounded-circle mx-auto my-2 d-block profile-image-admin ">
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ user.username }}
+                                        </td>
+                                        <td class="align-middle">
+                                            {{ user.email }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="{% url 'edit_user' user.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                            <a href="{% url 'delete_user' user.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                        </td>
+                                        <td class="align-middle">
+                                            <a href="{% url 'change_user_staff_status' user.id %}" class="btn btn-sm btn-outline-secondary">
+                                                {% if user.is_staff %}
+                                                    Change to User
+                                                {% else %}
+                                                    Change to Staff
+                                                {% endif %}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -366,7 +381,7 @@
                                 {% endif %}
                                 <!-- Current Page Indicator -->
                                 <li class="page-item disabled m-1">
-                                    <span class="btn btn-primary">Page {{ users.number }} of {{ users.paginator.num_pages }}</span>
+                                    <span class="btn btn-primary custom_pagination">Page {{ users.number }} of {{ users.paginator.num_pages }}</span>
                                 </li>
                                 {% if users.has_next %}
                                 <li class="page-item m-1">
@@ -386,7 +401,7 @@
                 <div class="table-responsive">
                     <div class="mb-4">
                         <h3 class="text-center">Bookings</h3>
-                        <table class="table text-center">
+                        <table class="table text-center table-primary table-bordered">
                             <thead>
                                 <tr>
                                     <th class="align-middle">
@@ -449,7 +464,7 @@
                                 {% endif %}
                                 <!-- Current Page Indicator -->
                                 <li class="page-item disabled m-1">
-                                    <span class="btn btn-primary">Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}</span>
+                                    <span class="btn btn-primary custom_pagination">Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}</span>
                                 </li>
                                 {% if bookings.has_next %}
                                 <li class="page-item m-1">

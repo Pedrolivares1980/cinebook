@@ -31,3 +31,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['image']
+
+class UserStaffStatusForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['is_staff']

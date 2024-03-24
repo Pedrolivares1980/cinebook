@@ -6,145 +6,91 @@
 <div class="container mt-5">
   <div class="row g-3">
     <!-- Profile Information -->
-    <div class="col-12 col-lg-3">
-      <div class="card">
-        <img class=" rounded-circle mx-auto my-2 d-block profile-image " src="{{ user.profile.image.url }}">
-        <div class="card-body">
-          <h5 class="card-title">{{ user.username }}</h5>
-          <p class="card-text">{{ user.email }}</p>
-          <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <fieldset class="form-group">
-              <legend class="border-bottom mb-4">Profile Info</legend>
-              {{ u_form|crispy }}
-              {{ p_form|crispy }}
-            </fieldset>
-            <div class="form-group">
-              <button class="btn btn-outline-info" type="submit">Update</button>
+      <div class="col-12 col-md-4">
+        <div class="card bg-dark text-white p-2">
+          <img class=" rounded-circle mx-auto my-2 d-block profile-image " src="{{ user.profile.image.url }}">
+          <div class="card-body text-center">
+            <h5 class="card-title text-capitalize">{{ user.username }}</h5>
+            <p class="card-text">{{ user.email }}</p>
+            <div class="text-center d-flex justify-content-center">
+              <a href="{% url 'edit_user' user.id %}" class="btn btn-info me-2 text-white">Edit Profile</a>
+              <a href="{% url 'delete_user' user.id %}" class="btn btn-danger">Delete Account</a>
             </div>
-          </form>
+          </div>
         </div>
-      </div>
     </div>
-
     <!-- Current Bookings -->
-    <div class="col-12 col-lg-6">
-      <h4 class="text-center">Current Bookings</h4>
-      <div class="accordion" id="currentBookingsAccordion">
-        {% for booking in current_bookings %}
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading{{ booking.id }}">
-            <button class="accordion-button custom-accordion-button" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapse{{ booking.id }}" aria-expanded="true" aria-controls="collapse{{ booking.id }}">
-              <div class="image-container d-flex justify-content-center align-items-center">
-                <img src="{{ booking.showtime.movie.poster_path }}" alt="{{ booking.showtime.movie.title }} poster" class="img-fluid custom-poster">
-              </div>
-            </button>
-          </h2>
-          <div id="collapse{{ booking.id }}" class="accordion-collapse collapse"
-            aria-labelledby="heading{{ booking.id }}" data-bs-parent="#currentBookingsAccordion">
-            <div class="accordion-body">
-              <p>Cinema: {{ booking.showtime.screening_room.cinema.name }}</p>
-              <p>Screening Room: {{ booking.showtime.screening_room.name }}</p>
-              <p>Movie: {{ booking.showtime.movie.title }}</p>
-              <p>Date and Time: {{ booking.showtime.showtime|date:"d-m-Y H:i" }}</p>
-              <p>Seats: {% for seat_reservation in booking.seat_reservations.all %}{{ seat_reservation.seat.row_letter }}{{ seat_reservation.seat.seat_number }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-              <a href="{% url 'delete_booking' booking.id %}" class="btn btn-danger btn-sm">Cancel</a>
-            </div>
-          </div>
-        </div>
-        {% empty %}
-        <p>No Current Bookings.</p>
-        {% endfor %}
-        <!-- Pagination Controls -->
-        <nav aria-label="Page navigation for current bookings">
-          <ul class="pagination justify-content-center">
-            <!-- Check if there are previous pages and display the First and Previous page links -->
-            {% if current_bookings.has_previous %}
-            <li class="page-item m-1">
-              <!-- Link to the first page -->
-              <a href="?current_page=1" class="btn btn-primary">&laquo; First</a>
-            </li>
-            <li class="page-item m-1">
-              <!-- Link to the previous page -->
-              <a href="?current_page={{ current_bookings.previous_page_number }}" class="btn btn-primary">Previous</a>
-            </li>
-            {% endif %}
-
-            <!-- Display the current page number and the total number of pages -->
-            <li class="page-item disabled m-1">
-              <span class="btn btn-primary">Page {{ current_bookings.number }} of {{ current_bookings.paginator.num_pages }}</span>
-            </li>
-
-            <!-- Check if there are next pages and display the Next and Last page links -->
-            {% if current_bookings.has_next %}
-            <li class="page-item m-1">
-              <!-- Link to the next page -->
-              <a href="?current_page={{ current_bookings.next_page_number }}" class="btn btn-primary">Next</a>
-            </li>
-            <li class="page-item m-1">
-              <!-- Link to the last page -->
-              <a href="?current_page={{ current_bookings.paginator.num_pages }}" class="btn btn-primary">Last &raquo;</a>
-            </li>
-            {% endif %}
-          </ul>
-        </nav>
-      </div>
-    </div>
-
-    <!-- Past Bookings -->
-    <div class="col-12 col-lg-3">
-      <h4 class="text-center">Past Bookings</h4>
-      <div class="accordion" id="pastBookingsAccordion">
-        {% for booking in past_bookings %}
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingPast{{ booking.id }}">
-            <button class="accordion-button custom-accordion-button" type="button" data-bs-toggle="collapse"
-              data-bs-target="#collapsePast{{ booking.id }}" aria-expanded="true"
-              aria-controls="collapsePast{{ booking.id }}">
-                <div class="image-container d-flex justify-content-center align-items-center">
-                  <img src="{{ booking.showtime.movie.poster_path }}" alt="{{ booking.showtime.movie.title }} poster" class="img-fluid custom-poster">
+    <div class="col-12 col-md-8">
+      <div class="container border border-2 rounded  bg-info-subtle">
+        <h4 class="text-center mb-3">Current Bookings</h4>
+        <div class="row">
+          {% for booking in current_bookings %}
+          <div class="col-12 mb-3">
+            <div class="card">
+              <!-- Image at the top on mobile, left on larger screens -->
+              <div class="row g-0 border border-2">
+                <div class="col-12 col-md-4">
+                  <img src="{{ booking.showtime.movie.poster_path }}" class="img-fluid rounded-start"
+                    alt="{{ booking.showtime.movie.title }} poster">
                 </div>
-            </button>
-          </h2>
-          <div id="collapsePast{{ booking.id }}" class="accordion-collapse collapse"
-            aria-labelledby="headingPast{{ booking.id }}" data-bs-parent="#pastBookingsAccordion">
-            <div class="accordion-body">
-              <p>Cinema: {{ booking.showtime.screening_room.cinema.name }}</p>
-              <p>Screening Room: {{ booking.showtime.screening_room.name }}</p>
-              <p>Movie: {{ booking.showtime.movie.title }}</p>
-              <p>Date and Time: {{ booking.showtime.showtime|date:"d-m-Y H:i" }}</p>
-              <p>Seats: {% for seat_reservation in booking.seat_reservations.all %}{{ seat_reservation.seat.row_letter }}{{ seat_reservation.seat.seat_number }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                <div class="col-12 col-md-8 bg-dark text-white">
+                  <div class="card-body text-center p-5">
+                    <h5 class="card-title">{{ booking.showtime.movie.title }}</h5>
+                    <p class="card-text">Cinema: {{ booking.showtime.screening_room.cinema.name }}</p>
+                    <p class="card-text">Screening Room: {{ booking.showtime.screening_room.name }}</p>
+                    <p class="card-text">Date and Time: {{ booking.showtime.showtime|date:"d-m-Y H:i" }}</p>
+                    <p class="card-text">Seats:
+                      {% for seat_reservation in booking.seat_reservations.all %}
+                      {{ seat_reservation.seat.row_letter }}{{ seat_reservation.seat.seat_number }}
+                      {% if not forloop.last %}, {% endif %}
+                      {% endfor %}
+                    </p>
+                    <div class="text-center mt-0 mt-md-4">
+                      <a href="{% url 'delete_booking' booking.id %}" class="btn btn-danger">Cancel Booking</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          {% empty %}
+          <p class="text-center">No Current Bookings.</p>
+          {% endfor %}
+          <!-- Pagination Controls -->
+          <nav aria-label="Page navigation for current bookings">
+            <ul class="pagination justify-content-center">
+              <!-- Check if there are previous pages and display the First and Previous page links -->
+              {% if current_bookings.has_previous %}
+              <li class="page-item m-1">
+                <!-- Link to the first page -->
+                <a href="?current_page=1" class=" btn btn-primary">&laquo; First</a>
+              </li>
+              <li class="page-item m-1">
+                <!-- Link to the previous page -->
+                <a href="?current_page={{ current_bookings.previous_page_number }}" class="btn btn-primary">Previous</a>
+              </li>
+              {% endif %}
+
+              <!-- Display the current page number and the total number of pages -->
+              <li class="page-item disabled m-1">
+                <span class="custom_pagination btn btn-primary">Page {{ current_bookings.number }} of {{ current_bookings.paginator.num_pages }}</span>
+              </li>
+
+              <!-- Check if there are next pages and display the Next and Last page links -->
+              {% if current_bookings.has_next %}
+              <li class="page-item m-1">
+                <!-- Link to the next page -->
+                <a href="?current_page={{ current_bookings.next_page_number }}" class="btn btn-primary">Next</a>
+              </li>
+              <li class="page-item m-1">
+                <!-- Link to the last page -->
+                <a href="?current_page={{ current_bookings.paginator.num_pages }}" class="btn btn-primary">Last
+                  &raquo;</a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
         </div>
-        {% empty %}
-        <p>No Past Bookings.</p>
-        {% endfor %}
-        <!-- Pagination Controls -->
-        <nav class="Pagination">
-          <ul class="pagination justify-content-center">
-            {% if current_bookings.has_previous %}
-            <li class="page-item m-1">
-              <a href="?current_page=1" class="btn btn-primary">&laquo; First</a>
-            </li>
-            <li class="page-item m-1">
-              <a href="?current_page={{ current_bookings.previous_page_number }}" class="btn btn-primary">Previous</a>
-            </li>
-            {% endif %}
-            <li class="page-item disabled m-1">
-              <span class="btn btn-primary">Page {{ current_bookings.number }} of {{ current_bookings.paginator.num_pages }}</span>
-            </li>
-            {% if current_bookings.has_next %}
-            <li class="page-item m-1">
-              <a href="?current_page={{ current_bookings.next_page_number }}" class="btn btn-primary">Next</a>
-            </li>
-            <li class="page-item m-1">
-              <a href="?current_page={{ current_bookings.paginator.num_pages }}" class="btn btn-primary">Last &raquo;</a>
-            </li>
-            {% endif %}
-          </ul>
-        </nav>
       </div>
     </div>
   </div>

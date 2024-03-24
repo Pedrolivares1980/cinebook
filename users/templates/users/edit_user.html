@@ -1,10 +1,33 @@
 {% extends "blog/base.html" %}
+{% load crispy_forms_tags static %}
+
 {% block content %}
-<h2>Edit User</h2>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ u_form.as_p }}
-    {{ p_form.as_p }}
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
+<div class="container mt-5">
+    <div class="row g-3 justify-content-center">
+        <!-- Edit User Information -->
+        <div class="col-12 col-md-8 my-4">
+            <div class="card bg-dark text-white p-2">
+                <!-- Ensure we're using user_to_edit to display the correct user information -->
+                <img class="rounded-circle mx-auto my-2 d-block profile-image" src="{{ user_to_edit.profile.image.url }}" alt="User Image">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ user_to_edit.username }}</h5>
+                    <p class="card-text">{{ user_to_edit.email }}</p>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Edit Profile Info</legend>
+                            {{ u_form|crispy }}
+                            {{ p_form|crispy }}
+                        </fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-info" type="submit">Update</button>
+                            <!-- Updated Back Button to use dynamic URL based on editing context -->
+                            <a href="{% if is_admin_editing %}{% url 'admin_dashboard' %}{% else %}{% url 'profile' %}{% endif %}" class="btn btn-danger">Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -12,11 +12,16 @@ class Movie(models.Model):
     poster_path = models.URLField(verbose_name="Poster URL")
     original_language = models.CharField(max_length=10, verbose_name="Original Language")
 
+
     def __str__(self):
         return self.title
+
+    def user_rating_stars(self):
+        # Convierte la calificación del 1-10 a 1-5
+        rating_scaled = self.user_rating / 2  # Escala de 1-10 a 1-5
+        rating_rounded = round(rating_scaled * 2) / 2  # Redondea al múltiplo más cercano de 0.5
+        return rating_rounded
 
     class Meta:
         verbose_name = "Movie"
         verbose_name_plural = "Movies"
-
-

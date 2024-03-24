@@ -135,6 +135,7 @@ class AdminMovieCreateView(LoginRequiredMixin, UserPassesTestMixin, TemplateView
             cast=cast,
             user_rating=movie_data.get('vote_average', 0),
             trailer_link=trailer_link,
+
         )
         return movie
     

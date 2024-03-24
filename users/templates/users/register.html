@@ -1,17 +1,25 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-  <div class="form-group">
-    <h2>Register</h2>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">Register</button>
-    </form>
-    <div class="border-top pt-3">
-      <small class="text-muted">
-        Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Log In</a>
-      </small>
-    </div>
-  </div>
+<div class="register-container ">
+	<div class="row justify-content-center">
+		<div class="col-md-8">
+			<div class="register-card shadow-lg rounded-3">
+				<div class="card-body p-5">
+					<h2 class="card-title text-center mb-4">Join Today</h2>
+					<form method="POST" class="register-form">
+						{% csrf_token %}
+						{{ form|crispy }}
+						<button class="register-submit btn-block btn btn-primary mt-4" type="submit">Sign Up</button>
+					</form>
+          <div class="border-top pt-3">
+            <small class="text-muted">
+              Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Log In</a>
+            </small>
+          </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {% endblock content %}

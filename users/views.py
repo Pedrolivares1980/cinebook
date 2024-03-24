@@ -16,9 +16,7 @@ from movies.models import Movie
 from django.contrib.auth.models import User
 from bookings.models import Booking
 from django.core.paginator import Paginator
-import io
-from django.http import FileResponse
-from django.db.models import Q
+from django.contrib.auth import get_user_model
 
 
 
@@ -26,6 +24,16 @@ from django.db.models import Q
 def is_staff(user):
     """Check if the user is a staff member or a superuser."""
     return user.is_staff or user.is_superuser
+
+@login_required
+@user_passes_test(is_staff)
+def change_user_staff_status(request, user_id):
+    User = get_user_model()
+    user = get_object_or_404(User, pk=user_id)
+    user.is_staff = not user.is_staff
+    user.save()
+    messages.success(request, f"Updated {user.username}'s staff status.")
+    return redirect('admin_dashboard')
 
 class AdminDashboardView(UserPassesTestMixin, TemplateView):
     template_name = 'users/admin_dashboard.html'
@@ -110,25 +118,15 @@ def profile(request):
         showtime__showtime__gte=timezone.now()
     ).select_related('showtime', 'showtime__movie', 'showtime__screening_room', 'showtime__screening_room__cinema').order_by('showtime__showtime')
     
-    # Fetch past bookings for past showtimes
-    past_bookings_query = Booking.objects.filter(
-        user=request.user, 
-        showtime__showtime__lt=timezone.now()
-    ).select_related('showtime', 'showtime__movie', 'showtime__screening_room', 'showtime__screening_room__cinema').order_by('-showtime__showtime')
 
     # Paginate current bookings
     current_page_number = request.GET.get('current_page', 1)
-    current_paginator = Paginator(current_bookings_query, 5)  # 5 bookings per page for example
+    current_paginator = Paginator(current_bookings_query, 5) 
     current_bookings = current_paginator.get_page(current_page_number)
 
-    # Paginate past bookings
-    past_page_number = request.GET.get('past_page', 1)
-    past_paginator = Paginator(past_bookings_query, 5)  # Adjust the number as needed
-    past_bookings = past_paginator.get_page(past_page_number)
 
     context = {
         'current_bookings': current_bookings,
-        'past_bookings': past_bookings,
         'u_form': UserUpdateForm(instance=request.user),
         'p_form': ProfileUpdateForm(instance=request.user.profile),
     }
@@ -136,42 +134,55 @@ def profile(request):
     return render(request, 'users/profile.html', context)
 
 @login_required
-@user_passes_test(is_staff)
 def edit_user(request, user_id=None):
-    user = get_object_or_404(User, pk=user_id) if user_id else request.user
+    """
+    Edit a user's profile. If user_id is provided, it's assumed that an admin is editing
+    another user's profile. Otherwise, users are editing their own profile.
+    """
+    User = get_user_model()
+
+    # Determine if the current user is editing their own profile or an admin is editing another's profile
+    is_admin_editing = user_id is not None and (request.user.is_staff or request.user.is_superuser)
+    
+    # Fetch the user to be edited. If user_id is not provided, default to the current user.
+    user_to_edit = get_object_or_404(User, id=user_id) if user_id else request.user
 
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=user)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user.profile)
+        u_form = UserUpdateForm(request.POST, instance=user_to_edit)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user_to_edit.profile)
+        
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
-            messages.success(request, 'Profile has been updated!')
-            return redirect('user_detail', user_id=user.pk) 
+            messages.success(request, 'The profile has been updated successfully!')
+            
+            # Redirect based on who is editing the profile
+            if is_admin_editing:
+                return redirect('admin_dashboard')
+            else:
+                return redirect('profile')
     else:
-        u_form = UserUpdateForm(instance=user)
-        p_form = ProfileUpdateForm(instance=user.profile)
+        u_form = UserUpdateForm(instance=user_to_edit)
+        p_form = ProfileUpdateForm(instance=user_to_edit.profile)
 
     context = {
         'u_form': u_form,
         'p_form': p_form,
-        'user': user
+        'is_admin_editing': is_admin_editing,
+        'user_to_edit': user_to_edit,
     }
+
     return render(request, 'users/edit_user.html', context)
 
 @login_required
-@user_passes_test(is_staff)
 def delete_user(request, user_id=None):
-    user = get_object_or_404(User, id=user_id)
-    if request.user.is_staff or request.user == user:
+    user_to_delete = get_object_or_404(User, id=user_id)
+    if request.user == user_to_delete or request.user.is_staff:
         if request.method == "POST":
-            user.delete()
+            user_to_delete.delete()
             messages.success(request, 'The user account has been successfully deleted.')
-            if request.user.is_staff:
-                return redirect('admin_dashboard')
-            else:
-                return redirect('movie_list')
-        return render(request, 'users/delete_user.html', {'user': user})
+            return redirect('movie_list') if request.user == user_to_delete else redirect('admin_dashboard')
+        return render(request, 'users/delete_user.html', {'user': user_to_delete})
     else:
         messages.error(request, 'You do not have permission to delete this user.')
         return redirect('movie_list')

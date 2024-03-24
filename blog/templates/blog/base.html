@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
   <link rel="stylesheet" href="{% static 'css/main.css' %}" />
@@ -18,22 +19,22 @@
 
 <body class="d-flex flex-column min-vh-100">
   <header>
-    <nav class="navbar navbar-expand-lg bg-danger fixed-top ">
-      <div class="container">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-md bg-black fixed-top ">
+      <div class="container-fluid ">
+        <a class="navbar-brand mx-5  logo text-white" href="{% url 'movie_list' %}"><span class="logo">M</span>ovie<span class="logo">T</span>icket</a>
+        <button class="navbar-toggler bg-white text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
+          aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <div class="navbar-nav ms-auto">
-            <a class="nav-item nav-link" href="{% url 'movie_list' %}">Home</a>
+        <div class="collapse navbar-collapse text-center" id="navbarToggle">
+          <div class="navbar-nav me-auto">
+            <a class="nav-item nav-link" aria-current="page" href="{% url 'movie_list' %}">Home</a>
             <a class="nav-item nav-link" href="{% url 'showtime_list' %}">Showtimes</a>
             <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
             <a class="nav-item nav-link" href="{% url 'blog-home' %}">Blog</a>
           </div>
           <!-- Navbar Right Side -->
-          <div class="navbar-nav">
+          <div class="navbar-nav ms-auto" >
             {% if user.is_authenticated %}
             <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
             {% if user.is_staff or user.is_superuser %}
@@ -57,7 +58,6 @@
         <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %} {% endif %} {% block content %}{% endblock %}
       </div>
-    </div>
     </div>
   </main>
   <footer class="bg-dark text-white mt-auto py-5 container-fluid">

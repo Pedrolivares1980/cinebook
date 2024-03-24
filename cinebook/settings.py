@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'movies.apps.MoviesConfig',
     'blog.apps.BlogConfig',
     'users.apps.UsersConfig',
+    'widget_tweaks',
     'crispy_forms',
     'crispy_bootstrap5',
     'django.contrib.admin',

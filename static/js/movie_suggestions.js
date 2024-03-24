@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('id_tmdb_id').value = movieDetails.id || 'N/A';
         document.getElementById('id_overview').value = movieDetails.overview || 'N/A';
         document.getElementById('id_release_date').value = movieDetails.release_date || 'N/A';
+    // ...
         
         // Use the constructed poster URL for the poster_path field
         document.getElementById('id_poster_path').value = posterUrl;
