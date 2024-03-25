@@ -1,73 +1,66 @@
 {% extends "blog/base.html" %}
 {% load static %}
 {% block content %}
-<script>
-  var csrftoken = '{{ csrf_token }}';
-</script>
 
-</script>
-<div class="d-flex flex-column flex-md-row container">
-  <div class="col-md-8">
-    {% for item in posts_with_comments_count %}
-    <article class="media content-section">
-      <img class="rounded-circle article-img w-25" src="{{ item.post.author.profile.image.url }}">
-      <div class="media-body">
-        <div class="article-metadata">
-          <p class="mr-2">by {{ item.post.author }}</p>
-          <small>{{ item.post.date_posted|date:'dS, F, Y' }}</small>
+<div class="container d-flex flex-column min-vh-100">
+  <div class="row g-3">
+    <!-- Link Section -->
+    <div class="col-12 col-md-4 order-md-2 mb-3">
+      <div class="links-section p-3 rounded">
+        <h3 class="text-center">CineBook Blog</h3>
+        <div class="d-grid gap-2">
+          {% if user.is_authenticated %}
+          <a href="{% url 'post-create' %}" class="btn btn-primary">New Post</a>
+          {% endif %}
+          <a href="{% url 'blog-home' %}" class="btn btn-primary">Latest Posts</a>
         </div>
-        <h2><a class="article-title" href="{% url 'post-detail' item.post.id %}">{{ item.post.title }}</a></h2>
-        <p class="article-content">{{ item.post.content|truncatewords:20 }}</p>
-        <!-- Corrected data-id and likes count to use item.post.id and item.post.likes.count -->
-        <button class="like-post btn btn-primary" id="like-btn-post-{{ item.post.id }}" data-id="{{ item.post.id }}">Like</button>
-        <span id="like-count-post-{{ item.post.id }}">{{ item.post.likes.count }} Likes</span>
-        <a class="btn btn-success" href="{% url 'post-detail' item.post.id %}">Comments: {{ item.comments_count }}</a>
       </div>
-    </article>
-    {% endfor %}
-  </div>
-  
-  <div class="col-md-4 mt-4 mt-md-0">
-    <div class="content-section">
-      <h3 class="text-center">CineBook Blog</h3>
-      <div class="d-grid gap-2">
-        {% if user.is_authenticated %}
-        <a href="{% url 'post-create' %}" class="btn btn-primary btn-block">New Post</a>
-        <a href="{% url 'user-posts' user.username %}" class="btn btn-primary btn-block">My Posts</a>
-        {% endif %}
-        <a href="{% url 'blog-home' %}" class="btn btn-primary btn-block">Latest Posts</a>
-      </div>
+    </div>
+    
+    <!-- Posts Section -->
+    <div class="col-12 col-md-8 order-md-1">
+      {% for post in posts %}
+      <article class="media content-section p-3 rounded mb-3">
+        <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+        <div class="media-body">
+          <div class="article-metadata">
+            <p class="mr-2 mt-2">by {{ post.author }}</p>
+            <small>{{ post.date_posted|date:'dS, F, Y' }}</small>
+          </div>
+          <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+          <p class="article-content">{{ post.content|truncatewords:20 }}</p>
+        </div>
+      </article>
+      {% endfor %}
     </div>
   </div>
   
-
+  <!-- Pagination Section -->
+  <div class="mt-auto">
+    <nav aria-label="Pagination" class="d-flex justify-content-center">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="btn btn-primary" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="First">First</a>
+        </li>
+        <li class="page-item">
+          <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item disabled">
+          <span class="btn btn-primary">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">Next</a>
+        </li>
+        <li class="page-item">
+          <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Last">Last</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
 </div>
 
-  <!-- Pagination -->
-  <nav aria-label="Pagination">
-    <ul class="pagination justify-content-center  mt-4">
-      {% if page_obj.has_previous %}
-      <li class="page-item m-1">
-        <a class="btn btn-primary" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="First">First</a>
-      </li>
-      <li class="page-item m-1">
-        <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">Previous</a>
-      </li>
-      {% endif %}
-      <li class="page-item disabled m-1">
-        <span class="btn btn-primary custom_pagination">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-      </li>
-      {% if page_obj.has_next %}
-      <li class="page-item m-1">
-        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">Next</a>
-      </li>
-      <li class="page-item m-1">
-        <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Last">Last</a>
-      </li>
-      {% endif %}
-    </ul>
-  </nav>
-
-<script src="{% static 'js/blog.js' %}"></script>
 {% endblock content %}
-

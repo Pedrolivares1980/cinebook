@@ -12,9 +12,7 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDeleteView,
-    UserPostListView,
     CommentCreateView,
-    CommentReplyView,
     CommentUpdateView,
     CommentDeleteView,
 )
@@ -99,15 +97,6 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('blog-home'))
 
-    def test_user_post_list_view(self):
-        """
-        Test the UserPostListView.
-        """
-        response = self.client.get(reverse('user-posts', args=['testuser']))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'blog/user_posts.html')
-        self.assertContains(response, 'Test Post')
-
     def test_comment_create_view(self):
         """
         Test the CommentCreateView.
@@ -116,18 +105,6 @@ class TestViews(TestCase):
         response = self.client.post(
             reverse('add-comment', args=[self.post.pk]),
             {'content': 'Test comment'}
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('post-detail', args=[self.post.pk]))
-
-    def test_comment_reply_view(self):
-        """
-        Test the CommentReplyView.
-        """
-        self.client.login(username='testuser', password='testpassword')
-        response = self.client.post(
-            reverse('add-reply', args=[self.post.pk, self.comment.pk]),
-            {'content': 'Test reply'}
         )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('post-detail', args=[self.post.pk]))

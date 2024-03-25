@@ -1,30 +1,36 @@
 {% for comment in comments %}
-<div class="{% if comment.parent %}reply ms-4{% else %}custom-comment{% endif %}">
+<div class="custom-comment">
     <div class="comment-body">
         <div class="d-flex align-items-center">
             <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}">
             <div class="ms-2">
                 <h5 class="mt-0">{{ comment.author.username }}</h5>
-                <small class="text-muted">{{ comment.date_posted|date:'dS, F, Y'}}</small>
+                <small class="text-muted">{{ comment.date_posted|date:'dS, F, Y' }}</small>
                 <p>{{ comment.content }}</p>
                 <div class="comment-actions">
+                    <div class="likes mb-3">
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'comment_like_post' comment.pk %}" method="POST">
+                            {% csrf_token %}
+                            {% if comment.user_has_liked %}
+                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-danger btn-sm"><i class="bi bi-hand-thumbs-down-fill">Unlike</i></button>
+                            {% else %}
+                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary btn-sm"><i class="bi bi-hand-thumbs-up-fill">Like</i></button>
+                            {% endif %}
+                            {{ comment.likes.count }} likes
+                        </form>
+                        {% else %}
+                        <a href="{% url 'login' %}"><small class="text-danger">You must Login to Like</small></a>
+                        <p class="text-center">{{ comment.likes.count }} likes</p>
+                        {% endif %}
+                    </div>
                     {% if comment.author == user %}
                     <a href="{% url 'comment-update' comment.id %}" class="btn btn-sm btn-secondary">Edit</a>
                     <a href="{% url 'comment-delete' comment.id %}" class="btn btn-sm btn-danger">Delete</a>
                     {% endif %}
-                    <a href="{% url 'add-reply' post_id=comment.post.id parent_id=comment.id %}" class="btn btn-sm btn-primary">Reply</a>
-                    <!-- Botón de like para el comentario -->
-                    <button class="like-comment btn btn-sm btn-primary" id="like-btn-comment-{{ comment.id }}" data-id="{{ comment.id }}">Like</button>
-                    <!-- Contador de likes para el comentario -->
-                    <span id="like-count-comment-{{ comment.id }}">{{ comment.likes.count }} Likes</span>
                 </div>
             </div>
         </div>
-        {% if comment.replies.all.exists %}
-        <div class="replies ms-3 mt-2">
-            {% include "blog/comment_thread.html" with comments=comment.replies.all %}
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endfor %}

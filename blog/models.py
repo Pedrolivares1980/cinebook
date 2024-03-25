@@ -3,57 +3,54 @@ from django.conf import settings
 from django.utils import timezone
 from django.urls import reverse
 
-# Abstract base class for Like functionality
-class Like(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        abstract = True
-
-# Model for blog posts
 class Post(models.Model):
+    """Model representing a blog post."""
+
     title = models.CharField(max_length=100)
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    # ManyToManyField to represent likes for the post. 'through' specifies the custom through model.
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='post_likes', through='PostLike')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='blog_posts')
 
+    def total_likes(self):
+        """Return the total number of likes for this post."""
+        return self.likes.count()
+    
     def __str__(self):
-        return self.title
+        """String representation of the Post."""
+        return self.title 
 
     def get_absolute_url(self):
+        """Returns the URL to access a detail record for this Post."""
         return reverse("post-detail", kwargs={"pk": self.pk})
 
-    # Method to count the number of likes
-    def total_likes(self):
-        return self.likes.count()
 
-# Model for comments on blog posts
 class Comment(models.Model):
+    """Model representing a comment on a blog post."""
+
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     date_posted = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
-    # ManyToManyField to represent likes for the comment. 'through' specifies the custom through model.
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_likes', through='CommentLike')
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='comment_likes')
+    
+    def is_author(self, user):
+        """
+        Determine if the given user is the author of this comment.
+        """
+        return self.author == user
+    
+    def total_comment_likes(self):
+        """
+        Return the total number of likes on this comment.
+        """
+        return self.likes.count()
 
     def __str__(self):
+        """String representation of the Comment."""
         return f"Comment by {self.author.username} on {self.post.title}"
 
     def get_absolute_url(self):
+        """Returns the URL to access a detail record for the Post associated with this Comment."""
         return reverse("post-detail", kwargs={"pk": self.post.pk})
-
-    # Method to count the number of likes
-    def total_likes(self):
-        return self.likes.count()
-
-# Through model for post likes, linking the Like model to the Post model
-class PostLike(Like):
-    post = models.ForeignKey(Post, related_name='likes_details', on_delete=models.CASCADE)
-
-# Through model for comment likes, linking the Like model to the Comment model
-class CommentLike(Like):
-    comment = models.ForeignKey(Comment, related_name='likes_details', on_delete=models.CASCADE)

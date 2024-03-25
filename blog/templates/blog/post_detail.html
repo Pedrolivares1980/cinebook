@@ -1,50 +1,98 @@
 {% extends "blog/base.html" %}
 {% load crispy_forms_tags %}
-{% load static %}
-
 
 {% block content %}
 <div class="container">
-  <article class="media content-section">
-    <img class="rounded-circle article-img w-25" src="{{ object.author.profile.image.url }}">
-
-    <div class="media-body mt-2">
-      <div class="article-metadata">
-        <h3 class="mr-2">{{ object.author }}</h3>
-        <small class="text-muted">{{ object.date_posted|date:'dS, F, Y' }}</small>
-
-        {% if object.author == user %}
-        <div>
-          <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
-          <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Article section -->
+      <div class="col-12 col-md-4 order-1 order-md-1">
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+          <div class="media-body mt-2">
+            <div class="article-metadata">
+              <h3 class="mr-2">{{ object.author }}</h3>
+              <small class="text-muted">{{ object.date_posted|date:'dS, F, Y' }}</small>
+              {% if object.author == user %}
+              <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+              </div>
+              {% endif %}
+            </div>
+            <h2 class="article-title">{{ object.title }}</h2>
+            <p class="article-content">{{ object.content }}</p>
+          </div>
+        </article>
+        <div class="mt-3 mb-3 text-center">
+          <div class="likes mb-3 d-flex align-items-center gap-2">
+            {% if user.is_authenticated %}
+            <a href="{% url 'add-comment' object.id %}" class="btn btn-primary me-2">Add Comment</a>
+            <form action="{% url 'like_post' object.pk %}" method="POST" class="d-flex align-items-center me-2">
+              {% csrf_token %}
+              {% if liked %}
+              <button type="submit" name="post_id" value="{{ object.id }}" class="btn btn-danger btn-sm me-2 ms-auto"><i class="bi bi-hand-thumbs-down-fill">Unlike</i></button>
+              {% else %}
+              <button type="submit" name="post_id" value="{{ object.id }}" class="btn btn-primary btn-sm me-2 ms-auto"><i class="bi bi-hand-thumbs-up-fill">Like</i></button>
+              {% endif %}
+            </form>
+            <p class="mb-0 text-danger ms-auto">{{ total_likes }} likes</p>
+            {% else %}
+            <a href="{% url 'login' %}" class="me-2"><small class="text-danger">You must Login to Like</small></a>
+            <p class="text-center mb-0">{{ total_likes }} likes</p>
+            {% endif %}
+          </div>
+          <a href="{% url 'blog-home' %}" class="btn btn-danger">Back</a>
         </div>
+      </div>
+  
+      <!-- Comments section -->
+      <div class="col-12 col-md-8 order-2 order-md-2">
+        <h3 class="text-center">Comments:</h3>
+        {% if comments %}
+        {% include "blog/comment_thread.html" with comments=comments user=user %}
+        {% else %}
+        <h4 class="text-center">No comments yet, be the first to comment!</h4>
         {% endif %}
       </div>
-
-      <h2 class="article-title">{{ object.title }}</h2>
-      <p class="article-content">{{ object.content }}</p>
-
-      <!-- Like button and count for the post, corrected to use 'object.id' and 'object.likes.count' -->
-      <button class="like-post btn btn-primary" id="like-btn-post-{{ object.id }}" data-id="{{ object.id }}">Like</button>
-      <span id="like-count-post-{{ object.id }}">{{ object.likes.count }} Likes</span>
     </div>
-  </article>
-
-  <div class="mt-3 mb-3 text-center">
-    <a href="{% url 'add-comment' object.id %}" class="btn btn-primary">Add Comment</a>
-    <a href="{% url 'blog-home' %}" class="btn btn-danger">Back</a>
   </div>
+  
 
-  <div class="comments mt-3">
-    <h3 class="text-center">Comments:</h3>
-
-    {% if main_comments %}
-    <!-- Include the template for displaying comments -->
-    {% include "blog/comment_thread.html" with comments=main_comments user=user %}
-    {% else %}
-    <h4 class="text-center">No comments yet, be the first to comment!</h4>
-    {% endif %}
-  </div>
+    <!-- Pagination at the bottom -->
+    <div class="row">
+      <div class="col-12 mt-3">
+        <nav aria-label="Pagination" class="d-flex justify-content-center">
+          <ul class="pagination justify-content-center  mt-4">
+            {% if page_obj.has_previous %}
+            <li class="page-item m-1">
+              <a class="btn btn-primary" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                aria-label="First">First</a>
+            </li>
+            <li class="page-item m-1">
+              <a class="btn btn-primary"
+                href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                aria-label="Previous">Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item disabled m-1">
+              <span class="btn btn-primary custom_pagination">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item m-1">
+              <a class="btn btn-primary"
+                href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                aria-label="Next">Next</a>
+            </li>
+            <li class="page-item m-1">
+              <a class="btn btn-primary"
+                href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                aria-label="Last">Last</a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
 </div>
-<script src="{% static 'js/blog.js' %}"></script>
 {% endblock content %}
