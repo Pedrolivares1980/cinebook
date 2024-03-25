@@ -5,12 +5,10 @@
 <!-- Section Title -->
 <h2 class="text-center my-4">Upcoming Showtimes</h2>
 
-<!-- Botón de Filtros -->
 <div class="text-center mb-3">
-    <button class="btn btn-info" type="button" id="toggle-filters">Filters</button>
+    <button class="btn btn-success mb-3" type="button" id="toggle-filters">Filters</button>
 </div>
 
-<!-- Formulario de Filtros, inicialmente oculto -->
 <div class="container border border-black" id="filter-form-container" style="display: none;">
     <!-- Panel con los filtros -->
     <form method="get" class="container">
@@ -43,13 +41,11 @@
     </form>
 </div>
 
-
-
 <div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 bg-info">
         {% for item in showtimes_with_seat_info %}
-        <div class="col">
-            <div class="card h-100">
+        <div class="col p-2 pb-4">
+            <div class="card h-100 ">
                 {% if item.showtime.movie.poster_path %}
                 <img src="{{ item.showtime.movie.poster_path }}" class="card-img-top" alt="{{ item.showtime.movie.title }} poster">
                 {% endif %}
@@ -64,7 +60,7 @@
                     </p>
                 </div>
                 <div class="card-footer text-center my-2">
-                    <a href="{% url 'movie_detail' item.showtime.movie.id %}" class="btn btn-primary">Movie Details</a>
+                    <a href="{% url 'movie_detail' item.showtime.movie.id %}" class="btn btn-success">Movie Details</a>
                     {% if user.is_authenticated %}
                     <a href="{% url 'create_booking' item.showtime.id %}" class="btn btn-primary ">Book Now</a>
                     {% else %}
