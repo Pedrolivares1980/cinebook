@@ -10,38 +10,44 @@
 </div>
 
 <div class="container border border-black" id="filter-form-container" style="display: none;">
-    <!-- Panel con los filtros -->
-    <form method="get" class="container">
-        <div class="row">
-            <div class="col-12 col-md-auto mb-2">
-                <label for="id_cinema" class="form-label">Cinema</label>
+    <!-- Filters -->
+    <form method="get" class="my-4 p-2">
+        <div class="d-flex flex-column flex-md-row justify-content-around align-items-center gap-2 p-2">
+            <div class="mb-3 mb-md-0">
+                <label for="id_cinema" class="form-label d-block text-center">Cinema</label>
                 {{ filter_form.cinema }}
             </div>
-            <div class="col-12 col-md-auto mb-2">
-                <label for="id_screening_room" class="form-label">Screening Room</label>
+            <div class="mb-3 mb-md-0">
+                <label for="id_screening_room" class="form-label d-block text-center">Screening Room</label>
                 {{ filter_form.screening_room }}
             </div>
-            <div class="col-12 col-md-auto mb-2">
-                <label for="id_movie" class="form-label">Movie</label>
-                {{ filter_form.movie }}
-            </div>
-            <div class="col-12 col-md-auto mb-2">
-                <label for="id_start_date" class="form-label">Start Date</label>
-                {{ filter_form.start_date }}
-            </div>
-            <div class="col-12 col-md-auto mb-2">
-                <label for="id_end_date" class="form-label">End Date</label>
-                {{ filter_form.end_date }}
-            </div>
-            <div class="col-12 col-md-auto mb-2">
-                <button type="submit" class="btn btn-primary">Filter</button>
-                <a href="{% url 'showtime_list' %}" class="btn btn-secondary">Clear Filters</a>
+            <div class="mb-3 mb-md-0">
+                <label for="id_movie" class="form-label d-block text-center">Movie</label>
+                <div class="input-wrapper">
+                    {{ filter_form.movie }}
+                </div>
             </div>
         </div>
-    </form>
+        <!-- Grupo para filtros de fecha -->
+        <div class="d-flex flex-column flex-md-row justify-content-around align-items-center mt-3">
+            <div class="mb-3 mb-md-0">
+                <label for="id_start_date" class="form-label d-block text-center">Start Date</label>
+                {{ filter_form.start_date }}
+            </div>
+            <div class="mb-3 mb-md-0">
+                <label for="id_end_date" class="form-label d-block text-center">End Date</label>
+                {{ filter_form.end_date }}
+            </div>
+        </div>
+        <!-- Botones -->
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{% url 'showtime_list' %}" class="btn btn-secondary">Clear Filters</a>
+        </div>
+    </form> 
 </div>
 
-<div class="container">
+<div class="container mt-3">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 bg-info">
         {% for item in showtimes_with_seat_info %}
         <div class="col p-2 pb-4">
@@ -60,42 +66,58 @@
                     </p>
                 </div>
                 <div class="card-footer text-center my-2">
-                    <a href="{% url 'movie_detail' item.showtime.movie.id %}" class="btn btn-success">Movie Details</a>
+                    <a href="{% url 'movie_detail' item.showtime.movie.id %}" class="btn btn-success mt-2">Movie Details</a>
                     {% if user.is_authenticated %}
-                    <a href="{% url 'create_booking' item.showtime.id %}" class="btn btn-primary ">Book Now</a>
+                    <a href="{% url 'create_booking' item.showtime.id %}" class="btn btn-primary mt-2">Book Now</a>
                     {% else %}
                     <small class="text-muted">Log in to book tickets.</small>
                     {% endif %}
                 </div>
             </div>
-        </div>
+            {% empty %}
+            <div class="container">
+                <div class="row justify-content-center align-items-center bg-info-subtle">
+                    <div class="col-md-6 text-center">
+                        <div class="alert-info" role="alert">
+                            <p class="py-2">We are sorry but at this time there is no showtime available that meets your requirements. Make a new search and we are sure we will be able to satisfy you.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         {% endfor %}
     </div>
 
     <!-- Pagination -->
-    <nav aria-label="Pagination">
-        <ul class="pagination justify-content-center  mt-4">
-            {% if page_obj.has_previous %}
-            <li class="page-item m-1">
-                <a class="btn btn-primary" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="First">First</a>
-            </li>
-            <li class="page-item m-1">
-                <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">Previous</a>
-            </li>
-            {% endif %}
-            <li class="page-item disabled m-1">
-                <span class="btn btn-primary custom_pagination ">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-            </li>
-            {% if page_obj.has_next %}
-            <li class="page-item m-1">
-                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">Next</a>
-            </li>
-            <li class="page-item m-1">
-                <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Last">Last</a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="row">
+        <div class="col-12 mt-3">
+            <nav aria-label="Pagination" class="d-flex justify-content-center">
+                <ul class="pagination justify-content-center  mt-4">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item m-1">
+                        <a class="btn btn-primary" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="First">First</a>
+                    </li>
+                    <li class="page-item m-1">
+                        <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">Previous</a>
+                    </li>
+                    {% endif %}
+                    <li class="page-item disabled m-1">
+                        <span class="btn btn-primary custom_pagination ">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item m-1">
+                        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">Next</a>
+                    </li>
+                    <li class="page-item m-1">
+                        <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Last">Last</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 <script src="{% static 'js/filters.js' %}"></script>

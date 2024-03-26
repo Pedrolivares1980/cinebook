@@ -3,12 +3,16 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>{% if object %}Edit Cinema{% else %}Add New Cinema{% endif %}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="{% url 'cinema_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+    <h2 class="text-center mb-3">{% if object %}Edit Cinema{% else %}Add New Cinema{% endif %}</h2>
+    <div class="d-flex justify-content-center custom_container">
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

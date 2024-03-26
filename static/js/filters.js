@@ -1,4 +1,3 @@
-// filters.js
 document.addEventListener('DOMContentLoaded', function() {
     const filterButton = document.getElementById('toggle-filters');
     const filterFormContainer = document.getElementById('filter-form-container');

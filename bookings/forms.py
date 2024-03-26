@@ -1,5 +1,8 @@
 from django import forms
-from .models import Booking, Showtime, Seat, SeatReservation
+from .models import Booking, SeatReservation
+from django.apps import apps
+
+
 
 class BookingForm(forms.ModelForm):
 	"""
@@ -10,7 +13,7 @@ class BookingForm(forms.ModelForm):
 		fields = ['showtime']
 
 	seats = forms.ModelMultipleChoiceField(
-		queryset=Seat.objects.none(), 
+		queryset=None, 
 		required=False, 
 		widget=forms.CheckboxSelectMultiple()
 	)
@@ -18,6 +21,10 @@ class BookingForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		showtime_id = kwargs.pop('showtime_id', None)
 		super(BookingForm, self).__init__(*args, **kwargs)
+		
+
+		Showtime = apps.get_model('showtimes', 'Showtime')
+		Seat = apps.get_model('screeningrooms', 'Seat')
 
 		if showtime_id:
 			self.showtime_instance = Showtime.objects.get(id=showtime_id)

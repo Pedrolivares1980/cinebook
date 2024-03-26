@@ -83,6 +83,33 @@ a {
     text-decoration: none;
 }
 
+.custom_container{
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--container-color);
+    border: .2rem solid black;
+    padding: .5rem;
+}
+
+.custom_container_delete{
+    width: 100%;
+    max-width: 600px;
+    height: 450px;
+    margin: 0 auto;
+    background-color: var(--container-color);
+    border: .2rem solid black;
+    padding: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+textarea{
+    resize: none;
+}
+
 /* --------------------------------Pagination Buttons */
 .custom_pagination {
     cursor: default;
@@ -226,6 +253,27 @@ a {
 }
 
 /* -------------------------------------Showtimes----------------------------- */
+
+#filter-form-container {
+    display: none;
+    margin-top: 1rem;
+    margin-bottom: 1.2rem;
+    background-color: var(--container-color);
+}
+
+.input-wrapper {
+    max-width: 100%;
+    width: 100%; /* Asegura que la envoltura ocupe todo el ancho disponible */
+}
+
+.custom-alert-container {
+    width: 50%;
+    margin: 0 auto; /* Centra el elemento horizontalmente */
+}
+
+.input-wrapper select {
+    width: 100%!important; /* Asegura que el select dentro de la envoltura ocupe todo el ancho */
+}
 
 .card-img-top {
     height: 700px;

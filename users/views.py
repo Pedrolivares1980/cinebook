@@ -40,28 +40,35 @@ class AdminDashboardView(UserPassesTestMixin, TemplateView):
 
     def test_func(self):
         """Ensure the user passes the is_staff check before granting access."""
-        return is_staff(self.request.user)
+        return self.request.user.is_staff
 
     def get_context_data(self, **kwargs):
         """Fetch and paginate all items for each admin dashboard section."""
         context = super().get_context_data(**kwargs)
 
-        # Order and paginate the querysets for each section
+        # Context setup for cinemas, screening rooms, movies, and users remains the same
         context['cinemas'] = self.paginate_queryset(Cinema.objects.all().order_by('id'), 'cinemas_page')
         context['screening_rooms'] = self.paginate_queryset(ScreeningRoom.objects.all().order_by('id'), 'screening_rooms_page')
         context['movies'] = self.paginate_queryset(Movie.objects.all().order_by('id'), 'movies_page')
-        context['showtimes'] = self.paginate_queryset(Showtime.objects.all().order_by('showtime'), 'showtimes_page')
         context['users'] = self.paginate_queryset(User.objects.all().order_by('username'), 'users_page')
-        context['bookings'] = self.paginate_queryset(Booking.objects.all().order_by('id'), 'bookings_page')
+
+        # Filter out past showtimes
+        future_showtimes_queryset = Showtime.objects.filter(showtime__gte=timezone.now()).order_by('showtime')
+        context['showtimes'] = self.paginate_queryset(future_showtimes_queryset, 'showtimes_page')
+
+        # Filter out bookings for past showtimes
+        future_bookings_queryset = Booking.objects.filter(showtime__showtime__gte=timezone.now()).order_by('showtime__showtime')
+        context['bookings'] = self.paginate_queryset(future_bookings_queryset, 'bookings_page')
 
         return context
 
     def paginate_queryset(self, queryset, page_param):
         """Paginate the ordered queryset based on the given page parameter."""
-        paginator = Paginator(queryset, 5)
+        paginator = Paginator(queryset, 5)  
         page_number = self.request.GET.get(page_param, 1)
         return paginator.get_page(page_number)
     
+
 # User registration view
 def register(request):
     if request.method == 'POST':

@@ -1,14 +1,13 @@
 from django.db import models
 from django.conf import settings
-from screeningrooms.models import Seat, ScreeningRoom
-from showtimes.models import Showtime
+
 
 class Booking(models.Model):
   """
   The Booking model represents a user's booking for a specific showtime.
   """
   user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
-  showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='bookings')
+  showtime = models.ForeignKey('showtimes.Showtime', on_delete=models.CASCADE, related_name='bookings')
   booking_time = models.DateTimeField(auto_now_add=True)
   is_active = models.BooleanField(default=True)
 
@@ -23,8 +22,8 @@ class SeatReservation(models.Model):
   """
   The SeatReservation model represents a seat reservation for a specific showtime.
   """
-  seat = models.ForeignKey(Seat, on_delete=models.CASCADE, related_name='reservations')
-  showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE, related_name='reservations')
+  seat = models.ForeignKey('screeningrooms.Seat', on_delete=models.CASCADE, related_name='reservations')
+  showtime = models.ForeignKey('showtimes.Showtime', on_delete=models.CASCADE, related_name='reservations' )
   booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='seat_reservations')
   is_reserved = models.BooleanField(default=True)
 

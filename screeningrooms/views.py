@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import  CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import ScreeningRoom
 from .forms import ScreeningRoomForm
@@ -29,14 +29,14 @@ class ScreeningRoomUpdateView(StaffRequiredMixin, UpdateView):
     template_name = 'screeningrooms/screeningroom_form.html'
     success_url = reverse_lazy('admin_dashboard')
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.object:  # Checks if an object is being updated
+            form.fields['cinema'].disabled = True  # Disables the 'cinema' field
+        return form
+
 # DeleteView for deleting a ScreeningRoom
 class ScreeningRoomDeleteView(StaffRequiredMixin, DeleteView):
     model = ScreeningRoom
     template_name = 'screeningrooms/screeningroom_confirm_delete.html'
     success_url = reverse_lazy('admin_dashboard')
-
-# ListView to show all ScreeningRooms
-class ScreeningRoomListView(ListView):
-    model = ScreeningRoom
-    template_name = 'screeningrooms/screeningroom_list.html'
-

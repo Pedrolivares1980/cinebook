@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import logging
 
 # Configuración inicial de logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logging.getLogger('boto3').setLevel(logging.INFO)
 logging.getLogger('botocore').setLevel(logging.INFO)
 

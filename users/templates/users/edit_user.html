@@ -12,19 +12,22 @@
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ user_to_edit.username }}</h5>
                     <p class="card-text">{{ user_to_edit.email }}</p>
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <fieldset class="form-group">
-                            <legend class="border-bottom mb-4">Edit Profile Info</legend>
-                            {{ u_form|crispy }}
-                            {{ p_form|crispy }}
-                        </fieldset>
-                        <div class="form-group">
-                            <button class="btn btn-info" type="submit">Update</button>
-                            <!-- Updated Back Button to use dynamic URL based on editing context -->
-                            <a href="{% if is_admin_editing %}{% url 'admin_dashboard' %}{% else %}{% url 'profile' %}{% endif %}" class="btn btn-danger">Back</a>
-                        </div>
-                    </form>
+                    <!-- Form Container -->
+                    <div class="d-flex flex-column align-items-center">
+                        <form method="POST" enctype="multipart/form-data" class=" w-50">
+                            {% csrf_token %}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Edit Profile Info</legend>
+                                {{ u_form|crispy }}
+                                {{ p_form|crispy }}
+                            </fieldset>
+                            <div class="d-flex justify-content-center gap-3">
+                                <button class="btn btn-sm btn-info w-25" type="submit">Update</button>
+                                <!-- Updated Back Button to use dynamic URL based on editing context -->
+                                <a href="{% if is_admin_editing %}{% url 'admin_dashboard' %}{% else %}{% url 'profile' %}{% endif %}" class="btn btn-sm btn-danger w-25">Back</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,9 +1,24 @@
 {% extends 'blog/base.html' %}
+{% load static %}
+
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="container mt-4">
+    <div class="custom_container_delete">
+        <h2>Confirm Delete</h2>
+        <p class="my-5 w-50 text-center">
+            Are you sure you want to delete:<br>
+            "<strong>{{ object.movie.title }}</strong>"<br>
+            in <strong>{{ object.screening_room.cinema.name }}</strong>-<strong>{{ object.screening_room.name }}</strong><br>
+            at <strong>{{ object.showtime|date:"d-m-Y" }}</strong> at <strong>{{ object.showtime|time:"H:i" }}</strong>
+        </p>
+        <div class="d-flex justify-content-center gap-3 mt-5">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, delete</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-success">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

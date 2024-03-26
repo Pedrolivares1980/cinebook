@@ -1,11 +1,14 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
-from screeningrooms.models import Seat
-from .models import Showtime, Booking, SeatReservation
+from .models import Booking, SeatReservation
 from .forms import BookingForm
 from django.contrib import messages
+from django.apps import apps
 
+
+Showtime = apps.get_model('showtimes', 'Showtime')
+Seat = apps.get_model('screeningrooms', 'Seat')
 
 @login_required
 def create_booking(request, showtime_id):
@@ -13,6 +16,7 @@ def create_booking(request, showtime_id):
   Create a new booking and reserve seats for the user.
   """
   showtime = get_object_or_404(Showtime, pk=showtime_id)
+
   if request.method == "POST":
     form = BookingForm(request.POST, showtime_id=showtime_id)
     if form.is_valid():

@@ -1,14 +1,18 @@
 {% extends 'blog/base.html' %}
-{% load django_bootstrap5 %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Confirm Delete</h2>
-    <p>Are you sure you want to delete the cinema "{{ object.name }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, delete</button>
-        <a href="{% url 'cinema_list' %}" class="btn btn-secondary">Cancel</a>
-    </form>
+    <div class="custom_container_delete">
+        <h2>Confirm Delete</h2>
+        <p class="my-5 w-50">Are you sure you want to delete the cinema "{{ object.name }}"?</p>
+        <div class="d-flex justify-content-center gap-3 mt-5">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, delete</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-success">Cancel</a>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

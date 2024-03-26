@@ -5,7 +5,6 @@ from django.urls import reverse_lazy
 from .models import Showtime
 from .forms import ShowtimeFilterForm
 from django.utils import timezone
-from bookings.models import SeatReservation
 
 
 class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
@@ -59,20 +58,19 @@ class ShowtimeListView(ListView):
                 queryset = queryset.filter(showtime__lte=end_date)
 
         return queryset
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter_form'] = ShowtimeFilterForm(self.request.GET)
-
-        showtimes_with_seat_info = []
-        for showtime in context['showtimes']:
-            total_seats = showtime.screening_room.seats.count()
-            reserved_seats = SeatReservation.objects.filter(showtime=showtime, is_reserved=True).count()
-            available_seats = total_seats - reserved_seats
-            showtimes_with_seat_info.append({
+        showtimes = context['showtimes']
+        
+        showtimes_with_seat_info = [
+            {
                 'showtime': showtime,
-                'total_seats': total_seats,
-                'available_seats': available_seats,
-            })
+                'total_seats': showtime.screening_room.seats.count(),
+                'available_seats': showtime.available_seats()
+            }
+            for showtime in showtimes
+        ]
+        
         context['showtimes_with_seat_info'] = showtimes_with_seat_info
+        context['filter_form'] = ShowtimeFilterForm(self.request.GET)
         return context
