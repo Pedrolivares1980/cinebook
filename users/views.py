@@ -17,10 +17,11 @@ from django.contrib.auth.models import User
 from bookings.models import Booking
 from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
-from django.contrib.auth.views import PasswordResetDoneView, PasswordResetView
+from django.contrib.auth.views import PasswordResetDoneView, PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.urls import reverse_lazy
+from .signals import password_reset_completed
 
 
 
@@ -219,3 +220,12 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
     def dispatch(self, *args, **kwargs):
         response = super().dispatch(*args, **kwargs)
         return redirect('movie_list')
+    
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Your password has been reset successfully. Please login with your new password.')
+        password_reset_completed.send(sender=self.__class__, user=form.user, request=self.request)
+        return response
