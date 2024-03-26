@@ -28,14 +28,12 @@ def send_booking_confirmation_email(booking):
     subject = "Booking Confirmation"
     showtime_formatted = booking.showtime.showtime.strftime("%A, %d of %B %Y at %H:%M")
     movie_image_url = booking.showtime.movie.poster_path
-    seat_reservations = booking.seat_reservations.all()
 
     html_content = render_to_string('email/booking_confirmation.html', {
         'username': booking.user.username,
         'showtime_formatted': showtime_formatted,
         'movie_title': booking.showtime.movie.title,
         'movie_image_url': movie_image_url,
-		'seat_reservations': seat_reservations,
     })
 
     text_content = strip_tags(html_content)
@@ -58,17 +56,12 @@ def send_booking_cancellation_email(booking):
     subject = "Booking Cancellation"
     showtime_formatted = booking.showtime.showtime.strftime("%A, %d of %B %Y at %H:%M")
     movie_image_url = booking.showtime.movie.poster_path
-    seat_reservations = booking.seat_reservations.all()
-    for seat_reservation in seat_reservations:
-        print(f"Row: {seat_reservation.seat.row_letter}, Seat: {seat_reservation.seat.seat_number}")
-
 
     html_content = render_to_string('email/booking_cancellation.html', {
         'username': booking.user.username,
         'showtime_formatted': showtime_formatted,
         'movie_title': booking.showtime.movie.title,
         'movie_image_url': movie_image_url,
-		'seat_reservations': seat_reservations,
     })
 
     text_content = strip_tags(html_content)
