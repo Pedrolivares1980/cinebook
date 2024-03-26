@@ -8,8 +8,10 @@
         <h1>Booking Confirmation</h1>
         <p>Dear <strong style="font-size: x-large;">{{ username }}</strong>,</p>
         <img src="{{ movie_image_url }}" alt="Movie Poster" style="width: 100%; max-width: 200px; height: auto; margin: 20px auto;">
-        <p>Your booking for <strong style="font-size: x-large;">{{ movie_title }}</strong></p>
-        <p>on <strong style="font-size: x-large;">{{ showtime_formatted }}</strong></p>
+        <p>Your booking for: </p>
+        <p><strong style="font-size: x-large;">{{ movie_title }}</strong></p>
+        <p>on: </p>
+        <p><strong style="font-size: x-large;">{{ showtime_formatted }}</strong></p>
         <p>has been confirmed.</p>
     </div>
 </body>
