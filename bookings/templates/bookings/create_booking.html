@@ -3,22 +3,41 @@
 
 {% block content %}
 <div class="container mt-3">
-    <h2>Create Booking for "{{ showtime.movie.title }}" at "{{ showtime.screening_room.name }}"</h2>
-    <p>Showtime: {{ showtime.showtime|date:"d-m-Y H:i" }}</p>
-
-    <form id="bookingForm" method="post">
+    <h2 class="text-center">"{{ showtime.movie.title }}" </h2>
+    <p class="text-center">Showtime: <strong>{{ showtime.showtime|date:"d-m-Y H:i" }}</strong> at <strong> {{ showtime.screening_room.name }}</strong></p>
+    <!-- Create a form for booking seats -->
+    <form class="bg-secondary-subtle p-4 rounded rounded-2" id="bookingForm" method="post">
         {% csrf_token %}
+        <!-- Render the hidden showtime field for the form -->
         {{ form.showtime.as_hidden }}
+        <!-- Display the seat selection UI -->
         <div id="seatSelection"></div>
-        <div >
-            <button type="submit" class="btn btn-primary">Book Seats</button>
-            <a href="{% url 'showtime_list' %}" class="btn btn-secondary">Back</a>
+        <div class="d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary me-2 w-25">Book Seats</button>
+            <a href="{% url 'showtime_list' %}" class="btn btn-danger w-25">Back</a>
         </div>
     </form>
 </div>
 
-<script src="{% static 'js/create_booking.js' %}" defer></script>
-<script>
-    document.currentScript.setAttribute('data-showtime-id', '{{ showtime.id }}');
-</script>
+<!-- Modal Structure -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-center w-100" id="modalLabel">Confirm Booking</h5>
+        </div>
+        <div class="modal-body">
+            Are you sure you want to book these seats? If you want to change your selection, press Cancel.
+        </div>
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-danger " data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirmBooking">Confirm</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Include the create_booking.js file and pass the showtime ID to it -->
+<script src="{% static 'js/create_booking.js' %}" data-showtime-id="{{ showtime.id }}"></script>
 {% endblock %}

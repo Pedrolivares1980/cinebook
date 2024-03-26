@@ -372,9 +372,10 @@ a {
     width: 70%;
     margin: 0 auto;
     margin-bottom: 30px;
-    background-color: #f3f3f3;
+    background-color: black;
+    color: white;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid black;
     text-align: center;
 }
 
