@@ -17,6 +17,10 @@ from django.contrib.auth.models import User
 from bookings.models import Booking
 from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
+from django.contrib.auth.views import PasswordResetDoneView, PasswordResetView
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.urls import reverse_lazy
 
 
 
@@ -192,4 +196,26 @@ def delete_user(request, user_id=None):
         return render(request, 'users/delete_user.html', {'user': user_to_delete})
     else:
         messages.error(request, 'You do not have permission to delete this user.')
+        return redirect('movie_list')
+
+class CustomPasswordResetView(PasswordResetView):
+    success_url = reverse_lazy('password_reset_done')
+    
+    def form_valid(self, form):
+        """Validates the password reset form."""
+        try:
+            validate_email(form.cleaned_data['email'])
+            if not User.objects.filter(email=form.cleaned_data['email']).exists():
+                messages.error(self.request, "There is no account with that email address.")
+                return super().form_invalid(form)
+            messages.success(self.request, "A password reset link has been sent to your email.")
+        except ValidationError:
+            messages.error(self.request, "Please enter a valid email address.")
+            return super().form_invalid(form)
+        
+        return super().form_valid(form)
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    def dispatch(self, *args, **kwargs):
+        response = super().dispatch(*args, **kwargs)
         return redirect('movie_list')

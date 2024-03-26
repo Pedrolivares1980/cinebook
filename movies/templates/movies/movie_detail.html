@@ -10,10 +10,10 @@
     <div class="row">
         <!-- Movie Poster -->
         <div class="col-md-4 mb-3">
-            <img src="{{ movie.poster_path }}" alt="{{ movie.title }} poster" class="img-fluid">
+            <img src="{{ movie.poster_path }}" alt="{{ movie.title }} poster" class="img-fluid border border-1 border-black rounded">
         </div>
 
-        <div class="col-md-8 bg-light p-4 rounded text-dark text-center">
+        <div class="col-md-8 bg-light p-4 border border-1 border-black rounded text-dark text-center">
             <!-- Movie Release Date -->
             <p><strong>Release Date:</strong> {{ movie.release_date|date:"d-m-Y" }}</p>
 
@@ -29,23 +29,22 @@
             <!-- User Rating -->
             {% if movie.user_rating %}
             <div class="rating-stars mb-4">
-                <p class="fw-bolder">Users Rating:</p>
+                <p class="fw-bolder">Users Rating: {{ movie.user_rating_stars }}</p>
                 {% with stars=movie.user_rating_stars|stars_range %}
                     {# Display full stars #}
                     {% for _ in stars.full_stars %}
-                        <i class="fa fa-star yellow-star" aria-hidden="true"></i>
+                        <i class="bi bi-star-fill yellow-star" aria-hidden="true"></i>
                     {% endfor %}
                     
                     {# Display half star if needed #}
                     {% for _ in stars.half_star %}
-                        <i class="fa fa-star-half-o yellow-star" aria-hidden="true"></i>
+                        <i class="bi bi-star-half yellow-star" aria-hidden="true"></i>
                     {% endfor %}
                     
                     {# Display empty stars #}
                     {% for _ in stars.empty_stars %}
-                        <i class="fa fa-star-o" aria-hidden="true"></i>
+                        <i class="bi bi-star" aria-hidden="true"></i>
                     {% endfor %}
-                    <p>{{ movie.user_rating_stars }}</p>
                 {% endwith %}
             </div>
             {% endif %}
@@ -53,7 +52,7 @@
             {% if movie.trailer_link %}
             <div class="trailer_movie mb-3 ">
                 {% with movie.trailer_link|slice:"32:" as video_id %}
-                <iframe width="100%" height="315" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="100%" height="315" class="border border-1 border-black rounded" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 {% endwith %}
             </div>
             {% endif %}
@@ -61,15 +60,15 @@
     </div>
 
 <!-- Showtimes -->
-<div class="mt-5 bg-light p-4 rounded">
+<div class="mt-5 bg-light p-4 rounded border border-2 border-black">
     <h3 class="text-center mb-3 mt-5">Showtimes</h3>
     <div class="d-flex justify-content-center">
         <div class="container mt-3 mb-2">
             <div class="row justify-content-center row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 {% for showtime in showtimes %}
                     {% if not showtime.has_passed %}
-                    <div class="col">
-                        <div class="card h-100">
+                    <div class="col ">
+                        <div class="card h-100 border border-1 border-black">
                             <div class="card-body text-center">
                                 <h5 class="card-title">{{ showtime.screening_room.cinema.name }}</h5>
                                 <p class="card-text">
