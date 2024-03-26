@@ -47,7 +47,7 @@
     </form> 
 </div>
 
-<div class="container mt-3">
+<div class="container">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 bg-info">
         {% for item in showtimes_with_seat_info %}
         <div class="col p-2 pb-4">
@@ -74,50 +74,44 @@
                     {% endif %}
                 </div>
             </div>
-            {% empty %}
-            <div class="container">
-                <div class="row justify-content-center align-items-center bg-info-subtle">
-                    <div class="col-md-6 text-center">
-                        <div class="alert-info" role="alert">
-                            <p class="py-2">We are sorry but at this time there is no showtime available that meets your requirements. Make a new search and we are sure we will be able to satisfy you.</p>
-                        </div>
+        </div>
+        {% empty %}
+        <div class="container bg-info-subtle">
+            <div class="row justify-content-center align-items-center" >
+                <div class="col-md-6 text-center">
+                    <div class="alert-info custom-alert-container" role="alert">
+                        <p class="py-3">We are sorry but at this time there is no showtime available that meets your requirements. Make a new search and we are sure we will be able to satisfy you.</p>
                     </div>
                 </div>
             </div>
-            
+        </div>
         {% endfor %}
     </div>
 
     <!-- Pagination -->
-    {% if page_obj.paginator.num_pages > 1 %}
-    <div class="row">
-        <div class="col-12 mt-3">
-            <nav aria-label="Pagination" class="d-flex justify-content-center">
-                <ul class="pagination justify-content-center  mt-4">
-                    {% if page_obj.has_previous %}
-                    <li class="page-item m-1">
-                        <a class="btn btn-primary" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="First">First</a>
-                    </li>
-                    <li class="page-item m-1">
-                        <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">Previous</a>
-                    </li>
-                    {% endif %}
-                    <li class="page-item disabled m-1">
-                        <span class="btn btn-primary custom_pagination ">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                    </li>
-                    {% if page_obj.has_next %}
-                    <li class="page-item m-1">
-                        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">Next</a>
-                    </li>
-                    <li class="page-item m-1">
-                        <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Last">Last</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </div>
-    {% endif %}
+    <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center  mt-4">
+            {% if page_obj.has_previous %}
+            <li class="page-item m-1">
+                <a class="btn btn-primary" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="First">First</a>
+            </li>
+            <li class="page-item m-1">
+                <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item disabled m-1">
+                <span class="btn btn-primary custom_pagination ">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            {% if page_obj.has_next %}
+            <li class="page-item m-1">
+                <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">Next</a>
+            </li>
+            <li class="page-item m-1">
+                <a class="btn btn-primary" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Last">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 
 <script src="{% static 'js/filters.js' %}"></script>

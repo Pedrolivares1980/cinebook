@@ -263,16 +263,16 @@ textarea{
 
 .input-wrapper {
     max-width: 100%;
-    width: 100%; /* Asegura que la envoltura ocupe todo el ancho disponible */
-}
-
-.custom-alert-container {
-    width: 50%;
-    margin: 0 auto; /* Centra el elemento horizontalmente */
+    width: 100%; 
 }
 
 .input-wrapper select {
-    width: 100%!important; /* Asegura que el select dentro de la envoltura ocupe todo el ancho */
+    width: 100%!important;
+}
+
+.custom-alert-container {
+    width: 100%;
+    margin: 0 auto;
 }
 
 .card-img-top {
