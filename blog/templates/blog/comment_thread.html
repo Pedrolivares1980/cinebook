@@ -1,34 +1,45 @@
 {% for comment in comments %}
-<div class="custom-comment">
-    <div class="comment-body">
-        <div class="d-flex align-items-center">
-            <img class="rounded-circle article-img" src="{{ comment.author.profile.image.url }}">
-            <div class="ms-2">
-                <h5 class="mt-0">{{ comment.author.username }}</h5>
-                <small class="text-muted">{{ comment.date_posted|date:'dS, F, Y' }}</small>
-                <p>{{ comment.content }}</p>
-                <div class="comment-actions">
-                    <div class="likes mb-3">
-                        {% if user.is_authenticated %}
-                        <form action="{% url 'comment_like_post' comment.pk %}" method="POST">
-                            {% csrf_token %}
-                            {% if comment.user_has_liked %}
-                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-danger btn-sm"><i class="bi bi-hand-thumbs-down-fill">Unlike</i></button>
-                            {% else %}
-                                <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary btn-sm"><i class="bi bi-hand-thumbs-up-fill">Like</i></button>
-                            {% endif %}
-                            {{ comment.likes.count }} likes
-                        </form>
+<div class="custom-comment mb-3">
+    <div class="row g-0">
+        <!-- User information -->
+        <div class="col-12 col-md-4  p-2">
+            <img class="img-fluid rounded-circle mx-auto d-block" src="{{ comment.author.profile.image.url }}" alt="User Image" style="width: 80px;">
+            <div class="text-center mt-2">
+                <h5>{{ comment.author.username }}</h5>
+                <small class="text-muted">{{ comment.date_posted|date:"d M, Y" }}</small>
+            </div>
+        </div>
+        
+        <!-- Comment section -->
+        <div class="col-12 col-md-8 p-2 ">
+            <p>{{ comment.content }}</p>
+        </div>
+        
+        <!-- Comment Actions -->
+        <div class="col-12 p-2">
+            <div class="d-md-flex justify-content-md-center align-items-center">
+                <div class="mb-2 mb-md-0">
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'comment_like_post' comment.pk %}" method="POST" class="d-flex align-items-center">
+                        {% csrf_token %}
+                        {% if comment.user_has_liked %}
+                            <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-danger btn-sm me-2">Unlike</button>
                         {% else %}
-                        <a href="{% url 'login' %}"><small class="text-danger">You must Login to Like</small></a>
-                        <p class="text-center">{{ comment.likes.count }} likes</p>
+                            <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary btn-sm me-2">Like</button>
                         {% endif %}
-                    </div>
-                    {% if comment.author == user %}
-                    <a href="{% url 'comment-update' comment.id %}" class="btn btn-sm btn-secondary">Edit</a>
-                    <a href="{% url 'comment-delete' comment.id %}" class="btn btn-sm btn-danger">Delete</a>
+                        <span>{{ comment.likes.count }} likes</span>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="text-danger">Login to like</a>
                     {% endif %}
                 </div>
+                
+                {% if comment.author == user %}
+                <div class="ms-md-3 d-flex justify-content-center gap-2">
+                    <a href="{% url 'comment-update' comment.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                    <a href="{% url 'comment-delete' comment.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
