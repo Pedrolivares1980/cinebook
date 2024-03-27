@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from .models import Movie
@@ -138,40 +138,7 @@ class AdminMovieCreateView(LoginRequiredMixin, UserPassesTestMixin, TemplateView
 
         )
         return movie
-    
-class AdminMovieUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    """
-    This view allows administrators to edit an existing movie. Inherits from
-    LoginRequiredMixin and UserPassesTestMixin to ensure that only authenticated
-    users with staff or superuser status can access this view.
-    """
-    model = Movie 
-    form_class = MovieForm 
-    template_name = 'movies/admin_movie_edit.html'
-    success_url = reverse_lazy('admin_dashboard')
 
-    def test_func(self):
-        """
-        Ensures that only staff members or superusers can access this view.
-        """
-        return self.request.user.is_staff or self.request.user.is_superuser
-
-    def form_valid(self, form):
-        """
-        Called when valid form data has been POSTed. It saves the form instance,
-        sets a success message, and redirects to the success URL.
-        """
-        response = super().form_valid(form) 
-        messages.success(self.request, 'The movie has been successfully updated.')
-        return response
-
-    def form_invalid(self, form):
-        """
-        Called if form is invalid. Sets an error message and re-renders the form.
-        """
-        messages.error(self.request, 'The form contains errors. Please correct them and try again.')
-        return super().form_invalid(form)
-    
 class AdminMovieDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Movie
     template_name = 'movies/admin_movie_delete.html'

@@ -1,24 +1,25 @@
 {% extends 'blog/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %} 
 
 {% block content %}
-<div class="container">
-    <h2>Add Movie</h2>
-    <form id="movie-form" method="post" action="{% url 'admin_movie_create' %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="movie-name" class="form-label">Movie Name</label>
-            <input type="text" id="movie-name" class="form-control" placeholder="Type to search for a movie...">
-            <div id="movie-suggestions" class="list-group mt-2"></div>
-        </div>
-        <input type="hidden" id="tmdb-id" name="tmdb_id">
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Movie</button>
-    </form>
+<div class="container mt-4  p-4">
+    <h2 class="text-center mb-3 mt-2 p-3">Add Movie Form</h2>
+    <div class="d-flex justify-content-center">
+        <form id="movie-form" method="post" action="{% url 'admin_movie_create' %}" class="custom_container p-5"> 
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="movie-name" class="form-label">Movie Name</label>
+                <input type="text" id="movie-name" class="form-control" placeholder="Type to search for a movie...">
+                <div id="movie-suggestions" class="list-group mt-2"></div>
+            </div>
+            <input type="hidden" id="tmdb-id" name="tmdb_id">
+            {{ form|crispy }}
+            <div class="d-flex justify-content-center gap-3 my-3">
+                <button type="submit" class="btn btn-primary">Save Movie</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-danger">Cancel</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
-
-{% block extra_js %}
-<script src="{% static 'js/movie_suggestions.js' %}"></script>
-{% endblock %}
-
