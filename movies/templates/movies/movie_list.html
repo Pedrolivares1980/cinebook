@@ -1,13 +1,13 @@
 {% extends 'blog/base.html' %} {% load static %} {% block content %}
 
-<div class="mt-4 rounded-3 bg-info">
+<div class="mt-3 mt-md-4 rounded-3 bg-info">
     <div class="container text-center mt-3 p-2">
         <h1>Welcome to MovieTicket</h1>
         <p>Explore our wonderful showtimes and cinemas, choose your favorites seats and come to enjoy with us!.</p>
     </div>
     <div class="container mt-4">
         <div class="row">
-            <div class="col-lg-6 carrousel-container">
+            <div class="col-lg-6 carrousel-container mb-0 mb-md-2">
                 <div id="movieCarousel" class="carousel slide rounded-3" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         {% for movie in movies %}
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="mt-md-4 mt-3">
+                <div class="mt-md-4 mt-1">
                     <h2 class="text-center">Enjoy a Movie</h2>
                     <p class="text-center">
                         Enjoy a new premiere or a great classic, everything is possible in our wide variety of theaters.
@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <div class="container mt-4 p-3 mb-3">
+    <div class="container mt-3 mt-md-4 p-3 mb-3">
         <div class="col-lg-12 text-center">
             <h2 class="text-center my-3 ">Discover Our Cinemas</h2>
             <p>
