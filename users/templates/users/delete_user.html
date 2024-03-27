@@ -1,9 +1,21 @@
-{% extends "blog/base.html" %}
+
+{% extends 'blog/base.html' %}
+{% load static %}
+
 {% block content %}
-<h2>Are you sure you want to delete "{{ user.username }}"?</h2>
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="container mt-4">
+    <div class="custom_container_delete">
+        <h2>Confirm Delete User</h2>
+        <p class="my-5 w-50 text-center">
+            <p class="text-center">Are you sure you want to delete the user with username "<strong class="text-capitalize">{{ user.username }}</strong>" and email  "<strong>{{ user.email }}</strong>"?</p>
+        <div class="d-flex justify-content-center gap-3 mt-5">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, delete</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-success">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

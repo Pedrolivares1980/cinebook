@@ -341,7 +341,7 @@
                                     {% if not user == request.user %}
                                     <tr>
                                         <td class="align-middle">
-                                            <img src="{{ user.profile.image.url }}" alt="{{ user.username }} profile image" class=" rounded-circle mx-auto my-2 d-block profile-image-admin ">
+                                            <img src="{{ user.profile.image.url }}" alt="{{ user.username }} profile image" class=" img-fluid rounded-circle mx-auto my-2 d-block profile-image-admin ">
                                         </td>
                                         <td class="align-middle">
                                             {{ user.username }}
@@ -350,7 +350,6 @@
                                             {{ user.email }}
                                         </td>
                                         <td class="align-middle">
-                                            <a href="{% url 'edit_user' user.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
                                             <a href="{% url 'delete_user' user.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
                                         </td>
                                         <td class="align-middle">

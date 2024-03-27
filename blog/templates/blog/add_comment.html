@@ -6,7 +6,7 @@
     <div class="card w-100 w-md-75 w-lg-50 content-section">
         <div class="card-body">
             {% if post_detail %}
-            <img class="rounded-circle article-img" src="{{ post_detail.author_profile_image }}"
+            <img class="img-fluid rounded-circle  article-img " src="{{ post_detail.author_profile_image }}"
                 alt="{{ post_detail.author_username }}">
             <h4 class="text-center">Comment on "{{ post_detail.title }}"</h4>
             <p class="text-center">By: {{ post_detail.author_username }} on {{ post_detail.date_posted|date:'dS, F, Y' }}</p>

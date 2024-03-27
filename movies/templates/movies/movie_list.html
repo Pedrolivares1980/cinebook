@@ -28,17 +28,19 @@
                     </a>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="mt-md-4 mt-1">
-                    <h2 class="text-center">Enjoy a Movie</h2>
-                    <p class="text-center">
-                        Enjoy a new premiere or a great classic, everything is possible in our wide variety of theaters.
-                    </p>
-                    <img src="{% static 'images/assets/film.jpg' %}" class="img-thumbnail rounded-3"
-                        alt="popcorns" />
-                </div>
-                <div class="text-center">
-                    <a href="{% url 'showtime_list' %}" class="btn btn-success mx-auto my-3">View All Showtimes</a>
+            <div class="col-lg-6 d-flex align-items-center justify-content-center" >
+                <div class="text-center" style="flex-grow: 1;">
+                    <div class="mt-md-4 mt-1">
+                        <h2>Enjoy a Movie</h2>
+                        <p >
+                            Enjoy a new premiere or a great classic, everything is possible in our wide variety of theaters.
+                        </p>
+                        <img src="{% static 'images/assets/film.jpg' %}" class="img-thumbnail rounded-3"
+                            alt="cinema" />
+                    </div>
+                    <div >
+                        <a href="{% url 'showtime_list' %}" class="btn btn-success mx-auto my-3">View All Showtimes</a>
+                    </div>
                 </div>
             </div>
         </div>

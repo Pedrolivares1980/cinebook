@@ -12,7 +12,7 @@
             <!-- Article Metadata -->
             <div class="d-flex justify-content-between mb-3  border-bottom border-white">
               <div class="d-flex align-items-start">
-                  <img class="rounded-circle article-img me-3" src="{{ object.author.profile.image.url }}" alt="User Image" style="width: 64px; height: 64px;">
+                  <img class="img-fluid rounded-circle article-img " src="{{ object.author.profile.image.url }}" alt="User Image" >
                   <div>
                       <h5>{{ object.author|capfirst }}</h5>
                       <small class="text-muted">{{ object.date_posted|date:"dS, F, Y" }}</small>

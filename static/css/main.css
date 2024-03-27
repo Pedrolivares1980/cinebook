@@ -10,6 +10,7 @@ body::-webkit-scrollbar{
 body::-webkit-scrollbar-thumb{
     background-color: black;
     border-radius: .8rem;
+
 }
 
 body::-webkit-scrollbar-thumb:hover{
@@ -268,19 +269,6 @@ textarea{
 /* --------Carrousel-------- */
 
 
-#movieCarousel .carousel-inner {
-    height: 800px;
-}
-
-#movieCarousel .carousel-item {
-    height: 100%;
-}
-
-#movieCarousel .carousel-item img {
-    max-height: 100%;
-    width: auto;
-    margin: auto; 
-}
 
 
 /*--------Cards-------- */
@@ -355,8 +343,8 @@ textarea{
 /* --------------------Profile----------------- */
 
 .profile-image {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: auto;
     object-fit: cover;
 }
 
@@ -385,8 +373,9 @@ textarea{
 /* --------------------------admin dashboard---------------- */
 
 .profile-image-admin{
-    width: 80px;
+    width: 100px;
     height: auto;
+    object-fit: cover;
 }
 
 /* Custom sidebar styles */
@@ -520,8 +509,8 @@ a.article-title:hover {
 }
 
 .article-img {
-    height: 65px;
     width: 65px;
+    height: auto;
     margin-right: 16px;
 }
 

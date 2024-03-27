@@ -37,6 +37,7 @@ class UserUpdateForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
+        user_id = self.user.pk if self.user else None
         # Exclude the current user from the existing e-mail check.
         if User.objects.filter(email=email).exclude(pk=self.user.pk).exists():
             raise forms.ValidationError("This email address has already been used, please use another email address.")
@@ -44,6 +45,7 @@ class UserUpdateForm(forms.ModelForm):
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
+        user_id = self.user.pk if self.user else None
         if User.objects.filter(username=username).exclude(pk=self.user.pk).exists():
             raise forms.ValidationError("This username is already taken, please choose another one.")
         return username
