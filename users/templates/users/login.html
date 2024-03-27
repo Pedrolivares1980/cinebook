@@ -8,7 +8,10 @@
       {% csrf_token %}
       <fieldset class="form-group">
         <legend class="border-bottom mb-4 text-center">Login</legend>
-        {{ form|crispy }}
+        <label for="id_username">Username or Email</label>
+        <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" class="textinput form-control" required id="id_username">
+        <label for="id_password" class="form-label mt-3">Password</label>
+        <input type="password" name="password" autocomplete="current-password" class="passwordinput form-control" required id="id_password">
       </fieldset>
       <div class="form-group m-3 text-center">
         <button class="btn btn-primary" type="submit">Login</button>

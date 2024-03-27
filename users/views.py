@@ -112,7 +112,7 @@ def logout_view(request):
 def profile(request):
     # Updating user and profile information
     if request.method == "POST":
-        u_form = UserUpdateForm(request.POST, instance=request.user)
+        u_form = UserUpdateForm(request.POST, instance=request.user, user=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
@@ -121,7 +121,7 @@ def profile(request):
             return redirect('profile')
 
     else:
-        u_form = UserUpdateForm(instance=request.user)
+        u_form = UserUpdateForm(instance=request.user, user=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
     # Fetch bookings, ensuring current bookings are for future showtimes
@@ -139,8 +139,8 @@ def profile(request):
 
     context = {
         'current_bookings': current_bookings,
-        'u_form': UserUpdateForm(instance=request.user),
-        'p_form': ProfileUpdateForm(instance=request.user.profile),
+        'u_form': u_form,
+        'p_form': p_form,
     }
 
     return render(request, 'users/profile.html', context)
@@ -160,8 +160,8 @@ def edit_user(request, user_id=None):
     user_to_edit = get_object_or_404(User, id=user_id) if user_id else request.user
 
     if request.method == 'POST':
-        u_form = UserUpdateForm(request.POST, instance=user_to_edit)
-        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user_to_edit.profile)
+        u_form = UserUpdateForm(request.POST, instance=user_to_edit, user=user_to_edit)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=user_to_edit.profile)        
         
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
@@ -174,7 +174,7 @@ def edit_user(request, user_id=None):
             else:
                 return redirect('profile')
     else:
-        u_form = UserUpdateForm(instance=user_to_edit)
+        u_form = UserUpdateForm(instance=user_to_edit, user=user_to_edit)
         p_form = ProfileUpdateForm(instance=user_to_edit.profile)
 
     context = {
