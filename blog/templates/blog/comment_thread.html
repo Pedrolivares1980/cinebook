@@ -3,7 +3,7 @@
     <div class="row g-0">
         <!-- User information -->
         <div class="col-12 col-md-4  p-2">
-            <img class="img-fluid rounded-circle mx-auto my-2 d-block article-img  " src="{{ comment.author.profile.image.url }}" alt="User Image" style="width: 80px;">
+            <img class="img-fluid rounded mx-auto my-2 d-block article-img  " src="{{ comment.author.profile.image.url }}" alt="User Image" style="width: 80px;">
             <div class="text-center mt-2">
                 <h5>{{ comment.author.username }}</h5>
                 <small class="text-muted">{{ comment.date_posted|date:"d M, Y" }}</small>
@@ -36,7 +36,7 @@
                 
                 {% if comment.author == user %}
                 <div class="ms-md-3 d-flex justify-content-center gap-2">
-                    <a href="{% url 'comment-update' comment.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                    <a href="{% url 'comment-update' comment.id %}" class="btn btn-success btn-sm">Edit</a>
                     <a href="{% url 'comment-delete' comment.id %}" class="btn btn-danger btn-sm">Delete</a>
                 </div>
                 {% endif %}

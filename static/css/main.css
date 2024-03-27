@@ -343,7 +343,7 @@ textarea{
 /* --------------------Profile----------------- */
 
 .profile-image {
-    width: 160px;
+    width: 120px;
     height: auto;
     object-fit: cover;
 }
@@ -373,8 +373,8 @@ textarea{
 /* --------------------------admin dashboard---------------- */
 
 .profile-image-admin{
-    width: 100px;
-    height: auto;
+    max-width: 80px;
+    max-width: 80px;
     object-fit: cover;
 }
 
@@ -509,7 +509,7 @@ a.article-title:hover {
 }
 
 .article-img {
-    width: 65px;
+    width: 80px;
     height: auto;
     margin-right: 16px;
 }
