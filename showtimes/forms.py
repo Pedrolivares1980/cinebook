@@ -19,9 +19,12 @@ class ShowtimeForm(forms.ModelForm):
 class ShowtimeFilterForm(forms.Form):
     cinema = forms.ModelChoiceField(queryset=Cinema.objects.all(), required=False, label="Cinema")
     screening_room = forms.ModelChoiceField(queryset=ScreeningRoom.objects.all(), required=False, label="Screening Room")
-    movie = forms.ModelChoiceField(queryset=Movie.objects.all(), required=False, label="Movie")
+    movie = forms.ModelChoiceField(queryset=Movie.objects.none(), required=False, label="Movie")
     start_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label="Start Date")
     end_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}), label="End Date")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['movie'].queryset = Movie.objects.filter(
+            showtime__showtime__gte=timezone.now()
+        ).distinct()

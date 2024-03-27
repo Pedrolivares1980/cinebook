@@ -1,8 +1,17 @@
 {% extends 'blog/base.html' %}
+{% load django_bootstrap5 %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Showtime</button>
-</form>
+<div class="container mt-4">
+    <h2 class="text-center mb-3">Add Showtime Form</h2>
+    <div class="d-flex justify-content-center custom_container">
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <button type="submit" class="btn btn-primary">Add Showtime</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
