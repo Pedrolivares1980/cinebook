@@ -1,15 +1,18 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-3 w-25">
-    <div class="col-12 p-4 bg-info text-center rounded-2 border border-2">
+<div class="container mt-4">
+    <div class="custom_container_delete">
         <h2>Cancel Booking</h2>
-        <p>Are You sure to cancel your booking? This action cannot be undone.</p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
-            <a href="{% url 'profile' %}" class="btn btn-secondary">Go Back</a>
-        </form>
+        <p class="my-5 w-50">Are You sure to cancel your booking? This action cannot be undone.</p>
+        <div class="d-flex justify-content-center gap-3 mt-5">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, delete</button>
+                <a href="{% url 'profile' %}" class="btn btn-success">Cancel</a>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
