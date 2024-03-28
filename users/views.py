@@ -22,6 +22,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.urls import reverse_lazy
 from .signals import password_reset_completed
+from django.db.models import Prefetch
 
 
 
@@ -124,7 +125,8 @@ def profile(request):
         u_form = UserUpdateForm(instance=request.user, user=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
-    # Fetch bookings, ensuring current bookings are for future showtimes
+    # fetch showtimes for future showtimes
+
     current_bookings_query = Booking.objects.filter(
         user=request.user, 
         showtime__showtime__gte=timezone.now()

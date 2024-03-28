@@ -39,10 +39,9 @@
                     <p class="card-text">Cinema: {{ booking.showtime.screening_room.cinema.name }}</p>
                     <p class="card-text">Screening Room: {{ booking.showtime.screening_room.name }}</p>
                     <p class="card-text">Date and Time: {{ booking.showtime.showtime|date:"d-m-Y H:i" }}</p>
-                    <p class="card-text">Seats:
+                    <p class="card-text">Seats: 
                       {% for seat_reservation in booking.seat_reservations.all %}
-                      {{ seat_reservation.seat.row_letter }}{{ seat_reservation.seat.seat_number }}
-                      {% if not forloop.last %}, {% endif %}
+                      {{ seat_reservation.seat.row_letter }}{{ seat_reservation.seat.seat_number }}{% if not forloop.last %}, {% endif %}
                       {% endfor %}
                     </p>
                     <div class="text-center mt-0 mt-md-4">

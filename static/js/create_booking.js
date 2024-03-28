@@ -65,6 +65,42 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             seatSelectionContainer.appendChild(rowDiv);
         });
+        addSeatSelectionListeners();
+    }
+
+    // function to check the current count of reserved seats for the user and the specific showtime
+    async function checkCurrentSeatsCount(showtimeId) {
+        try {
+            const response = await fetch(`/bookings/seats-reserved-count/${showtimeId}/`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.seats_count;
+        } catch (error) {
+            console.error('Error fetching current seats count:', error);
+            return 0; // Return 0 if there's an error, as a fallback
+        }
+    }
+
+    async function addSeatSelectionListeners() {
+        const currentSeatsCount = await checkCurrentSeatsCount(showtimeId);
+        
+        document.querySelectorAll('input[name="seats"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', async function() {
+                const selectedSeats = document.querySelectorAll('input[name="seats"]:checked').length;
+                
+                // If the number of currently selected seats plus the seats already reserved by the user exceeds 4, show a modal alert
+                if (selectedSeats + currentSeatsCount > 4) {
+                    // Show the seat limit alert modal
+                    var seatLimitAlertModal = new bootstrap.Modal(document.getElementById('seatLimitAlertModal'), {});
+                    seatLimitAlertModal.show();
+                    
+                    // Deselect the last selected checkbox to ensure no more than 4 can be selected in total
+                    checkbox.checked = false;
+                }
+            });
+        });
     }
 
     // Function to group seats by their row letters

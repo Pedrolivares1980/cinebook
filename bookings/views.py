@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from .models import Booking, SeatReservation
+from .signals import send_booking_confirmation_email, send_booking_cancellation_email
 from .forms import BookingForm
 from django.contrib import messages
 from django.apps import apps
@@ -33,6 +34,8 @@ def create_booking(request, showtime_id):
               seat=seat, showtime=showtime, booking=booking, is_reserved=True
           )
 
+      send_booking_confirmation_email(booking)
+
       messages.success(request, "Booking successfully created.")
       return redirect("profile")
   else:
@@ -43,30 +46,44 @@ def create_booking(request, showtime_id):
     request, "bookings/create_booking.html", {"form": form, "showtime": showtime}
   )
 
+@login_required
+def seats_reserved_count(request, showtime_id):
+    """
+    Calculate the seats number booking for the user in a single showtime     """
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'User is not authenticated'}, status=401)
+
+
+    seats_count = SeatReservation.objects.filter(booking__user=request.user, showtime_id=showtime_id).count()
+
+    return JsonResponse({'seats_count': seats_count})
+
 
 @login_required
 def delete_booking(request, booking_id):
-  """
-  Delete a booking and release the reserved seats.
-  """
-  try:
+    """
+    Handles booking cancellation and seat release.
+    """
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
 
     if request.method == "POST":
-      # Release the reserved seats for the booking being deleted.
-      SeatReservation.objects.filter(booking=booking).update(is_reserved=False)
+        # Collect seat details before deleting the booking
+        seats_details = ", ".join([f"{seat.seat.row_letter}{seat.seat.seat_number}" for seat in booking.seat_reservations.all()])
+        
+        # Release the reserved seats for the booking being deleted.
+        SeatReservation.objects.filter(booking=booking).update(is_reserved=False)
+        
+        # Send cancellation email before deleting the booking to have access to seat reservations
+        send_booking_cancellation_email(booking, seats_details)
 
-      # Delete the booking.
-      booking.delete()
+        # Delete the booking after sending the email
+        booking.delete()
 
-      messages.success(request, "Your booking has been cancelled successfully.")
-      return redirect("profile")
+        messages.success(request, "Your booking has been cancelled successfully.")
+        return redirect("profile")
     else:
-      # Display confirmation for booking deletion.
-      return render(request, "bookings/confirm_delete.html", {"booking": booking})
-  except Exception as e:
-    # Display an error message.
-    messages.error(request, "Error cancelling the booking.")
+        # Display confirmation for booking deletion.
+        return render(request, "bookings/confirm_delete.html", {"booking": booking})
 
 
 def seat_availability(request, showtime_id):

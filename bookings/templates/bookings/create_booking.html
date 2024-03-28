@@ -19,7 +19,7 @@
     </form>
 </div>
 
-<!-- Modal Structure -->
+<!-- Modal Booking Confirmation -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -37,7 +37,24 @@
     </div>
 </div>
 
+<!-- Modal for Seat Limit Alert -->
+<div class="modal fade" id="seatLimitAlertModal" tabindex="-1" aria-labelledby="seatLimitAlertModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title " id="seatLimitAlertModalLabel">Seat Selection Limit</h5>
+            </div>
+            <div class="modal-body text-center">
+                You have selected the maximum number of seats allowed (4) for this showtime.
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Include the create_booking.js file and pass the showtime ID to it -->
-<script src="{% static 'js/create_booking.js' %}" data-showtime-id="{{ showtime.id }}"></script>
+<script src="{% static 'js/create_booking.js' %}" data-showtime-id="{{ showtime.id }}" defer></script>
 {% endblock %}
