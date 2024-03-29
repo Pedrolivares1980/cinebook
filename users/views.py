@@ -23,13 +23,10 @@ from django.core.validators import validate_email
 from django.urls import reverse_lazy
 from .signals import password_reset_completed
 from django.db.models import Prefetch
+from users.utils import is_staff
 
 
 
-
-def is_staff(user):
-    """Check if the user is a staff member or a superuser."""
-    return user.is_staff or user.is_superuser
 
 @login_required
 @user_passes_test(is_staff)

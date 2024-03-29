@@ -23,9 +23,9 @@
                     <form action="{% url 'comment_like_post' comment.pk %}" method="POST" class="d-flex align-items-center">
                         {% csrf_token %}
                         {% if comment.user_has_liked %}
-                            <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-danger btn-sm me-2">Unlike</button>
+                            <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-danger btn-sm me-2"><i class="bi bi-hand-thumbs-down-fill">Unlike</i></button>
                         {% else %}
-                            <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary btn-sm me-2">Like</button>
+                            <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary btn-sm me-2"><i class="bi bi-hand-thumbs-up-fill">Like</i></button>
                         {% endif %}
                         <span>{{ comment.likes.count }} likes</span>
                     </form>

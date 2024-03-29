@@ -373,8 +373,8 @@ textarea{
 /* --------------------------admin dashboard---------------- */
 
 .profile-image-admin{
-    max-width: 80px;
-    max-width: 80px;
+    width: 80px;
+    width: 80px;
     object-fit: cover;
 }
 
