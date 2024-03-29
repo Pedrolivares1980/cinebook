@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const url = `/movies/suggestions/?query=${query}`;
         try {
             const response = await fetch(url);
+            console.log("Response status:", response.status);
             if (!response.ok) throw new Error('Failed to fetch suggestions');
             const data = await response.json();
             console.log("Suggestions received:", data);
@@ -111,7 +112,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Listening for user input to fetch suggestions
     movieInput.addEventListener('input', async () => {
+        console.log("Input event triggered");
         const query = movieInput.value.trim();
+        console.log("Input event triggered for query:", query);
         if (query.length >= 3) {
             const data = await fetchSuggestions(query);
             displaySuggestions(data.results);
