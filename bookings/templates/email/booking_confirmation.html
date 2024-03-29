@@ -16,6 +16,10 @@
         <p>has been confirmed.</p>
         <p>Your reserved seats: </p>
         <p><strong>{{ seats_details }}</strong></p></p>
+        <p><strong>Scan this code to collect the tickets</strong></p>
+        <div style="margin: 20px auto; display: block;">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" style="max-width: 100%; height: auto;">
+        </div>
     </div>
 </body>
 </html>

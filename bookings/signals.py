@@ -5,8 +5,27 @@ from django.core.mail import  EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+import qrcode
+from io import BytesIO
+import base64
 
+def generate_qr_code(data):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
 
+    img = qr.make_image(fill_color="black", back_color="white")
+    buffered = BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+
+    # Retorna la imagen en formato Base64
+    return img_str
 
 
 def send_booking_confirmation_email(booking):
@@ -15,12 +34,17 @@ def send_booking_confirmation_email(booking):
     movie_image_url = booking.showtime.movie.poster_path
     seats_details = ", ".join([f"{seat_reservation.seat.seat_number}{seat_reservation.seat.row_letter}" for seat_reservation in booking.seat_reservations.all()])    
     
+    qr_data = f"Username: {booking.user.username}, Email: {booking.user.email}, Movie: {booking.showtime.movie.title}, Showtime: {showtime_formatted}, Seats: {seats_details}"
+    qr_code_image_base64 = generate_qr_code(qr_data)
+
+
     html_content = render_to_string('email/booking_confirmation.html', {
         'username': booking.user.username,
         'showtime_formatted': showtime_formatted,
         'movie_title': booking.showtime.movie.title,
         'movie_image_url': movie_image_url,
-		'seats_details': seats_details
+		'seats_details': seats_details,
+        'qr_code': qr_code_image_base64
     })
 
     text_content = strip_tags(html_content)
@@ -33,6 +57,7 @@ def send_booking_confirmation_email(booking):
     )
 
     email.attach_alternative(html_content, "text/html")
+
     email.send()
 
 
