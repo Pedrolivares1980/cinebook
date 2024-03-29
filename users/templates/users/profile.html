@@ -45,6 +45,7 @@
                       {% endfor %}
                     </p>
                     <div class="text-center mt-0 mt-md-4">
+                      <a href="{% url 'resend_confirmation_email' booking.id %}" class="btn btn-success">Resend Confirmation Email</a>
                       <a href="{% url 'delete_booking' booking.id %}" class="btn btn-danger">Cancel Booking</a>
                     </div>
                   </div>

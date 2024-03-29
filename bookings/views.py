@@ -6,6 +6,7 @@ from .signals import send_booking_confirmation_email, send_booking_cancellation_
 from .forms import BookingForm
 from django.contrib import messages
 from django.apps import apps
+from .signals import send_booking_confirmation_email
 
 
 Showtime = apps.get_model('showtimes', 'Showtime')
@@ -123,3 +124,10 @@ def seat_availability(request, showtime_id):
   # Catch any exceptions and return a JSON response with an error.
   except Exception as e:
     return JsonResponse({"error": "Error fetching seat availability"}, status=500)
+
+@login_required
+def resend_confirmation_email(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+    send_booking_confirmation_email(booking)
+    messages.success(request, "Confirmation email resent successfully.")
+    return redirect('profile')
