@@ -60,5 +60,4 @@ class Profile(models.Model):
                 # Log any unexpected errors
                 logger.error(f'Unexpected error processing image for user {self.user.username}: {e}')
 
-        # Call the superclass method to save the object
         super().save(*args, **kwargs)

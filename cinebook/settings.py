@@ -4,7 +4,7 @@ import dj_database_url
 from dotenv import load_dotenv
 import logging
 
-# Configuración inicial de logging
+
 logging.basicConfig(level=logging.INFO)
 logging.getLogger('boto3').setLevel(logging.INFO)
 logging.getLogger('botocore').setLevel(logging.INFO)
@@ -112,8 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # Default backend
-    'users.backends.EmailOrUsernameModelBackend',  # Custom backend
+    'django.contrib.auth.backends.ModelBackend', 
+    'users.backends.EmailOrUsernameModelBackend', 
 ]
 
 

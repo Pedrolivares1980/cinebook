@@ -35,7 +35,6 @@ class ShowtimeListView(ListView):
     paginate_by = 6 
 
     def get_queryset(self):
-        # Start with a base queryset of all future showtimes
         queryset = Showtime.objects.filter(showtime__gte=timezone.now()).order_by('showtime')
 
         form = ShowtimeFilterForm(self.request.GET)

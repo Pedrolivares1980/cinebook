@@ -173,7 +173,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
     fields = ["content"]
-    template_name = "blog/comment_update.html"  # Crear este template
+    template_name = "blog/comment_update.html"
 
     def form_valid(self, form):
         form.instance.author = self.request.user

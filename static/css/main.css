@@ -265,12 +265,6 @@ textarea{
     color: #FFD700; /* Intense yellow color */
 }
 
-
-/* --------Carrousel-------- */
-
-
-
-
 /*--------Cards-------- */
 
 .home-movie {
@@ -555,11 +549,6 @@ a.article-title:hover {
     .cinema-screen {
         width: 50%;
     }
-
-    /* .seat-row {
-        justify-content: space-around;
-        flex-wrap: wrap;
-    } */
 
     .seat {
         margin: 0 10px;

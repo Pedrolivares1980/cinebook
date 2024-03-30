@@ -26,7 +26,6 @@ def create_booking(request, showtime_id):
       booking = form.save(commit=False)
       booking.user = request.user
 
-      # Save the booking to the database.
       booking.save()
 
       # Process reserved seats from the form.
@@ -77,7 +76,6 @@ def delete_booking(request, booking_id):
         # Send cancellation email before deleting the booking to have access to seat reservations
         send_booking_cancellation_email(booking, seats_details)
 
-        # Delete the booking after sending the email
         booking.delete()
 
         messages.success(request, "Your booking has been cancelled successfully.")

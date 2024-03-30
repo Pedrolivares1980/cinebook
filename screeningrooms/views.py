@@ -31,8 +31,8 @@ class ScreeningRoomUpdateView(StaffRequiredMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        if self.object:  # Checks if an object is being updated
-            form.fields['cinema'].disabled = True  # Disables the 'cinema' field
+        if self.object: 
+            form.fields['cinema'].disabled = True 
         return form
 
 # DeleteView for deleting a ScreeningRoom

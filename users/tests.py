@@ -3,12 +3,9 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from .models import Profile
-from .forms import UserRegisterForm, UserUpdateForm
+from .forms import UserRegisterForm
 import os
 from shutil import rmtree
-
-
-# Import settings to access BASE_DIR
 from django.conf import settings
 
 class UserFormsTests(TestCase):
