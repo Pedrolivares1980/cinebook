@@ -152,8 +152,8 @@ MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-LOGIN_REDIRECT_URL = "movie_list"
-LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "movies/movie_list"
+LOGIN_URL = "users/login"
 
 
 

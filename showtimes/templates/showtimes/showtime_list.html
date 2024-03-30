@@ -70,7 +70,7 @@
                     {% if user.is_authenticated %}
                     <a href="{% url 'create_booking' item.showtime.id %}" class="btn btn-primary mt-2">Book Now</a>
                     {% else %}
-                    <small class="text-muted">Log in to book tickets.</small>
+                    <a href="{% url 'login' %}" class="btn btn-primary mt-2">Login to Book</a>
                     {% endif %}
                 </div>
             </div>

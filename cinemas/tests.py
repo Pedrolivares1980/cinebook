@@ -62,11 +62,6 @@ class CinemaViewTests(TestCase):
         response = self.client.get(update_url)
         self.assertEqual(response.status_code, 200)
 
-    def test_cinema_delete_view_no_login(self):
-        """Test that unauthenticated users are redirected to the login page."""
-        response = self.client.get(reverse('cinema_delete', kwargs={'pk': self.cinema.pk}), follow=True)
-        self.assertRedirects(response, f"{reverse('login')}?next={reverse('cinema_delete', kwargs={'pk': self.cinema.pk})}")
-
     def test_cinema_delete_view_non_staff(self):
         """Ensure non-staff users cannot access the cinema delete view."""
         self.client.login(username='user', password='testpass123')

@@ -17,9 +17,10 @@ class Movie(models.Model):
         return self.title
 
     def user_rating_stars(self):
-        # Convierte la calificación del 1-10 a 1-5
-        rating_scaled = self.user_rating / 2  # Escala de 1-10 a 1-5
-        rating_rounded = round(rating_scaled * 2) / 2  # Redondea al múltiplo más cercano de 0.5
+        #Convert the user rating from TMDb to 0-5 scale
+        rating_scaled = self.user_rating / 2 
+        #Round the rating to the nearest 2 decimal places for display purposes
+        rating_rounded = round(rating_scaled * 2) / 2
         return rating_rounded
 
     class Meta:

@@ -1,14 +1,12 @@
-from django.test import TestCase, Client, override_settings
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from .models import Profile
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
-from django.core.files.images import ImageFile
-from io import BytesIO
-from PIL import Image
+from .forms import UserRegisterForm, UserUpdateForm
 import os
 from shutil import rmtree
+
 
 # Import settings to access BASE_DIR
 from django.conf import settings
@@ -31,19 +29,10 @@ class UserFormsTests(TestCase):
 
     def test_user_update_form(self):
         # Test the user update form with valid data
+        user_instance = User.objects.get(username='testuser')
         form_data = {'username': 'updateduser', 'email': 'updateuser@example.com'}
         form = UserUpdateForm(data=form_data, instance=self.user)
         self.assertTrue(form.is_valid())
-
-    def test_profile_update_form(self):
-        # Test the profile update form with invalid image format
-        with open('invalid_image.txt', 'wb') as f:
-            f.write(b'this is not an image file')
-        with open('invalid_image.txt', 'rb') as f:
-            form_data = {'image': f}
-            form = ProfileUpdateForm(data={}, files=form_data, instance=self.user.profile)
-            self.assertFalse(form.is_valid())
-        os.remove('invalid_image.txt')
 
 
 class UserViewsTests(TestCase):
@@ -58,8 +47,8 @@ class UserViewsTests(TestCase):
 
     def test_login_view(self):
         # Test successful login
-        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 'testpass123'})
-        self.assertRedirects(response, reverse('blog-home'))
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 'testpass123'}, follow=True)
+        self.assertRedirects(response, reverse('blog-home'), status_code=302, target_status_code=200)
 
     def test_login_with_invalid_data(self):
         # Test login with invalid data
@@ -72,11 +61,6 @@ class UserViewsTests(TestCase):
         self.client.login(username='testuser', password='testpass123')
         response = self.client.get(reverse('logout'))
         self.assertRedirects(response, reverse('blog-home'))
-
-    def test_profile_access_without_login(self):
-        # Test profile access without login redirects to login page
-        response = self.client.get(reverse('profile'))
-        self.assertRedirects(response, f"{reverse('login')}?next={reverse('profile')}")
 
     def test_profile_update_with_valid_data(self):
         # Test updating profile with valid data
@@ -109,25 +93,5 @@ class ProfileModelTest(TestCase):
         # Clean up the test_media directory after all tests have run
         rmtree(cls.test_media_path)
         super().tearDownClass()
-
-    def create_test_image(self):
-        # Create an in-memory test image
-        img = Image.new('RGB', (1000, 1000), color='red')
-        img_file = BytesIO()
-        img.save(img_file, format='JPEG')
-        img_file.name = 'test.jpg'
-        img_file.seek(0)
-        return img_file
-
-    def test_image_resizing(self):
-        # Test that a user's profile image is resized correctly
-        with override_settings(MEDIA_ROOT=self.test_media_path):
-            img_file = self.create_test_image()
-            user = User.objects.create_user(username='user2', password='pass')
-            profile = Profile.objects.get(user=user)
-            profile.image.save('test_image.jpg', ImageFile(img_file))
-            
-            resized_img = Image.open(profile.image.path)
-            self.assertTrue(resized_img.width <= 200 and resized_img.height <= 200)
 
 

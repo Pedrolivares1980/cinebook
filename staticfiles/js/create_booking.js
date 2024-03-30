@@ -6,25 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
      // Get the container where seat selections are displayed
     const seatSelectionContainer = document.getElementById('seatSelection');
 
-    // Initialize the Bootstrap modal with animation disabled
-    var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {
-        keyboard: false, // Prevent closing the modal with the keyboard
-        animation: false // Disable animation for the modal
-    });
-
-    // Event listener for the form submission
-    bookingForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the form from submitting immediately
-
-        // Show the confirmation modal
-        confirmationModal.show();
-    });
-
-    // When the confirm button in the modal is clicked
-    document.getElementById('confirmBooking').addEventListener('click', function () {
-        // Submit the form programmatically
-        bookingForm.submit();
-    });
 
     // Fetch and display seat availability
     fetchSeatAvailability(showtimeId);
