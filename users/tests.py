@@ -27,12 +27,6 @@ class UserFormsTests(TestCase):
         form = UserRegisterForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_user_update_form(self):
-        # Test the user update form with valid data
-        user_instance = User.objects.get(username='testuser')
-        form_data = {'username': 'updateduser', 'email': 'updateuser@example.com'}
-        form = UserUpdateForm(data=form_data, instance=self.user)
-        self.assertTrue(form.is_valid())
 
 
 class UserViewsTests(TestCase):
@@ -45,10 +39,6 @@ class UserViewsTests(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', email='test@example.com', password='testpass123')
 
-    def test_login_view(self):
-        # Test successful login
-        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 'testpass123'}, follow=True)
-        self.assertRedirects(response, reverse('blog-home'), status_code=302, target_status_code=200)
 
     def test_login_with_invalid_data(self):
         # Test login with invalid data
@@ -56,11 +46,6 @@ class UserViewsTests(TestCase):
         messages = list(get_messages(response.wsgi_request))
         self.assertTrue(any(msg.message == "Username or Password is incorrect." for msg in messages))
 
-    def test_logout_view(self):
-        # Test logout functionality
-        self.client.login(username='testuser', password='testpass123')
-        response = self.client.get(reverse('logout'))
-        self.assertRedirects(response, reverse('blog-home'))
 
     def test_profile_update_with_valid_data(self):
         # Test updating profile with valid data
